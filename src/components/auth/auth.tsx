@@ -13,14 +13,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { signInWithEmail, signUpNewUser } from "@/features/auth";
 
 type AuthProps = {
   type: "login" | "signup";
 };
 const Auth = ({ type }: AuthProps) => {
-  console.log("Type ", type);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    if(!email && !password){
+      alert('Please enter email and password.');
+      return;
+    }
+
+    let response:any = {};
+    if(type === 'login'){
+     response = await signInWithEmail(email, password);
+    } else {
+     response = await signUpNewUser(email, password);
+    }
+
+    console.log("RESPONSE ", response);
+  }
+
   return (
     <Card className="w-full max-w-sm bg-gray-200">
       <CardHeader className="justify-center">
@@ -50,7 +68,11 @@ const Auth = ({ type }: AuthProps) => {
         {type === "login" ? (
           <p>
             New to our application?
-            <Button variant={"link"} asChild className="text-blue-800">
+            <Button 
+            variant={"link"} 
+            asChild 
+            className="text-blue-800"
+            >
               <Link href="/signup">SignUp</Link>
             </Button>
           </p>
@@ -64,7 +86,10 @@ const Auth = ({ type }: AuthProps) => {
         )}
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button className="w-full">
+        <Button 
+        className="w-full"
+        onClick={handleSubmit}
+        >
           {type === "login" ? "Continue" : "Get Started"}
         </Button>
       </CardFooter>
