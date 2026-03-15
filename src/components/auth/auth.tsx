@@ -12,17 +12,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 type AuthProps = {
   type: "login" | "signup";
 };
 const Auth = ({ type }: AuthProps) => {
   console.log("Type ", type);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
+    <Card className="w-full max-w-sm bg-gray-200">
+      <CardHeader className="justify-center">
         <CardTitle>
           {type === "login" ? "Login to your account" : "Create your account"}
         </CardTitle>
@@ -37,7 +38,7 @@ const Auth = ({ type }: AuthProps) => {
             type="email"
           />
         </div>
-        <div>
+        <div className="mb-4">
           <CustomInput
             label="Password"
             value={password}
@@ -46,9 +47,26 @@ const Auth = ({ type }: AuthProps) => {
             type="password"
           />
         </div>
+        {type === "login" ? (
+          <p>
+            New to our application?
+            <Button variant={"link"} asChild className="text-blue-800">
+              <Link href="/signup">SignUp</Link>
+            </Button>
+          </p>
+        ) : (
+          <p>
+            Already have an account?
+            <Button variant={"link"} asChild className="text-blue-800">
+              <Link href="/login">Login</Link>
+            </Button>
+          </p>
+        )}
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button className="w-full">{type === "login" ? "Continue" : "Get Started"}</Button>
+        <Button className="w-full">
+          {type === "login" ? "Continue" : "Get Started"}
+        </Button>
       </CardFooter>
     </Card>
   );

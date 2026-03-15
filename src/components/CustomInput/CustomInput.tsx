@@ -37,6 +37,7 @@ const CustomInput = ({
         disabled={disabled}
         minLength={minLength}
         maxLength={maxLength}
+        className="bg-white"
       />
       {description && description.length > 0 && (
         <FieldDescription>{description}</FieldDescription>
