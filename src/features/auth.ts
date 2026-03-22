@@ -1,18 +1,20 @@
-import { supabase } from "@/lib/supabase/supabase.client";
+import { createClient } from "@/lib/supabase/client"
 
 export async function signUpNewUser(email:string, password:string) {
-  const { data, error } = await supabase.auth.signUp({
+  const supabaseBrowserClient = createClient();
+  const { data, error } = await supabaseBrowserClient.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/dashboard`,
+      emailRedirectTo: `${location.origin}/dashboard`,
     },
   })
   return {data, error}
 }
 
 export async function signInWithEmail(email:string, password:string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const supabaseBrowserClient = createClient();
+  const { data, error } = await supabaseBrowserClient.auth.signInWithPassword({
     email,
     password,
   })
@@ -20,6 +22,7 @@ export async function signInWithEmail(email:string, password:string) {
 }
 
 export async function logOut(){
-  const {error} = await supabase.auth.signOut();
-  return {error}
+  const supabaseBrowserClient = createClient();
+  const {error} = await supabaseBrowserClient.auth.signOut();
+  return error
 }
