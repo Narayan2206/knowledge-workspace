@@ -14,13 +14,16 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { signInWithEmail, signUpNewUser } from "@/features/auth";
+import { useRouter } from "next/navigation";
 
 type AuthProps = {
   type: "login" | "signup";
 };
 const Auth = ({ type }: AuthProps) => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -28,7 +31,7 @@ const Auth = ({ type }: AuthProps) => {
       alert('Please enter email and password.');
       return;
     }
-
+    setLoading(true);
     let response:any = {};
     if(type === 'login'){
      response = await signInWithEmail(email, password);
@@ -41,10 +44,14 @@ const Auth = ({ type }: AuthProps) => {
     if(response.error){
       console.error("Some error occurred while logging in ", response.error);
     }
-    else{
-
+     else{
+      if(type === "login"){
+        router.push("/dashboard");
+      } else if(type === "signup"){
+        alert("Check your email to confirm your account before logging in.");
+      }
     }
-    
+    setLoading(false);
   }
 
   return (
@@ -97,6 +104,7 @@ const Auth = ({ type }: AuthProps) => {
         <Button 
         className="w-full"
         onClick={handleSubmit}
+        disabled={loading}
         >
           {type === "login" ? "Continue" : "Get Started"}
         </Button>
