@@ -37,6 +37,14 @@ const Auth = ({ type }: AuthProps) => {
     }
 
     console.log("RESPONSE ", response);
+
+    if(response.error){
+      console.error("Some error occurred while logging in ", response.error);
+    }
+    else{
+
+    }
+    
   }
 
   return (
