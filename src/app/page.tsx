@@ -15,6 +15,7 @@ export default function Home() {
     }
   };
   return (
+    <header>
     <div>
       {user ? (
         <Button onClick={handleLogout}>Logout</Button>
@@ -25,5 +26,7 @@ export default function Home() {
         </>
       )}
     </div>
+    {user && <p>Welcome {user?.user_metadata?.email}</p>}
+    </header>
   );
 }
