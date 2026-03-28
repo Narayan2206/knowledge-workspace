@@ -47,7 +47,7 @@ const Auth = ({ type }: AuthProps) => {
     }
      else{
       if(type === "login"){
-        router.push("/dashboard");
+        router.replace("/dashboard");
       } else if(type === "signup"){
         alert("Check your email to confirm your account before logging in.");
       }
