@@ -1,12 +1,15 @@
 import { createClient } from "@/lib/supabase/client"
 
-export async function signUpNewUser(email:string, password:string) {
+export async function signUpNewUser(email:string, password:string, name: string) {
   const supabaseBrowserClient = createClient();
   const { data, error } = await supabaseBrowserClient.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${location.origin}/dashboard`,
+      data: {
+        name
+      }
     },
   })
   return {data, error}
