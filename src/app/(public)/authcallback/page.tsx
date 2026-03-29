@@ -14,7 +14,7 @@ export default function AuthCallback() {
       console.log("GET CLAIMS DATA ",  data);
       
       if (data) {
-        router.replace("/dashboard");
+        router.replace("/onboarding");
       } else {
         router.replace("/login");
       }
