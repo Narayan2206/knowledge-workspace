@@ -6,7 +6,7 @@ export async function signUpNewUser(email:string, password:string, name: string)
     email,
     password,
     options: {
-      emailRedirectTo: `${location.origin}/dashboard`,
+      emailRedirectTo: `${location.origin}/authcallback`,
       data: {
         name
       }
