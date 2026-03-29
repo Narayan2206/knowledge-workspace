@@ -66,22 +66,24 @@ export const workspaceMemberService = {
 };
 
 export const workspaceMemberDataService = {
-  async createWorkspaceOnSignup(data: {
-    name: string;
-    slug: string;
-    userId: string;
-    role: string;
-  }) {
-    const workspace = await workspaceService.createWorkspace({
-      created_by: data.userId,
-      name: data.name,
-      slug: data.slug,
-    });
+  //! async createWorkspaceAndAddMember(data: {
+  //   name: string;
+  //   slug: string;
+  //   userId: string;
+  //   role: string;
+  // }) {
+  //   const workspace = await workspaceService.createWorkspace({
+  //     created_by: data.userId,
+  //     name: data.name,
+  //     slug: data.slug,
+  //   });
 
-    await workspaceMemberService.addWorkspaceMember({
-      workspace_id: workspace.id,
-      user_id: data.userId,
-      role: "admin",
-    });
-  },
+  //   await workspaceMemberService.addWorkspaceMember({
+  //     workspace_id: workspace.id,
+  //     user_id: data.userId,
+  //     role: "admin",
+  //   });
+
+  //   return workspace;
+  // },
 };

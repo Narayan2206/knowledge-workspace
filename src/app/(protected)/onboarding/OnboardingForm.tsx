@@ -4,32 +4,37 @@ import CustomInput from "@/components/CustomInput/CustomInput";
 import { Button } from "@/components/ui/button";
 import { workspaceService } from "@/lib/services";
 import { useAuthStore } from "@/store/auth.store";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 function OnboardingForm() {
   const [workspaceName, setWorkspaceName] = useState("");
   const user = useAuthStore((s) => s.user);
+  const router = useRouter();
 
   const handleCreateWorkspace = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ): Promise<void> => {
     e.preventDefault();
 
-    if(!user){
-        alert('User is not authenticated');
-        return;
+    if (!user) {
+      alert("User is not authenticated");
+      return;
     }
 
     try {
-      const response = await workspaceService.createWorkspace({
-        name: workspaceName,
-        slug: `${Date.now()}-${Math.random()}`,
-        created_by: user.id,
-      });
-      console.log("Response ", response);
+        const workspace = await workspaceService.createWorkspace({
+          name: workspaceName,
+          slug: `${Date.now()}-${Math.random()}`,
+          created_by: user.id,
+        });
+        console.log("Response ", workspace);
+      if (workspace?.slug) {
+        router.replace(`/workspace/${workspace.slug}`);
+      }
     } catch (error) {
-        console.error(error);
-        alert('Unable to Create workspace');
+      console.error(error);
+      alert("Unable to Create workspace");
     }
   };
 
