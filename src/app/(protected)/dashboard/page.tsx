@@ -1,10 +1,9 @@
-import Workspace from "@/components/dashboard/Workspace";
+import DashboardComponent from "./DashboardComponent";
 
 const Dashboard = () => {
   return (
     <>
-      <div>congratulations you are signed in.</div>
-      <Workspace />
+      <DashboardComponent />
     </>
   );
 };
