@@ -4,7 +4,7 @@ import { WorkspaceMembers, Workspaces } from "./supabase/models";
 const supabase = createClient();
 
 export const workspaceService = {
-  async getWorkspaces(userId: string): Promise<Workspaces[]> {
+  async getAllWorkspaces(userId: string): Promise<Workspaces[]> {
     const { data, error } = await supabase
       .from("workspaces")
       .select("*")
