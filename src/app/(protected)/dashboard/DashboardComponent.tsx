@@ -25,7 +25,7 @@ const DashboardComponent = () => {
         console.log("RESPONSE ", data);
 
         if (isMounted) {
-          // setWorkspaces(data || []);
+          setWorkspaces(data || []);
         }
       } catch (error) {
         console.error("Failed to fetch workspaces:", error);
