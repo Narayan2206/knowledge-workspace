@@ -8,6 +8,8 @@ import { useAuthStore } from "@/store/auth.store";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { FolderPlus, Plus } from "lucide-react";
+import { CreateWorkspaceModal } from "@/components/workspaces/create-workspace-modal";
+import { toast } from "sonner";
 
 const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
@@ -17,7 +19,10 @@ const DashboardComponent = () => {
   useEffect(() => {
     let isMounted = true;
     const fetchWorkspaces = async () => {
-      if (!user?.id) return;
+      if (!user?.id) {
+        toast.error("User is not authenticated", { position: "top-center" });
+        return;
+      }
 
       try {
         setIsLoading(true);
@@ -29,6 +34,7 @@ const DashboardComponent = () => {
         }
       } catch (error) {
         console.error("Failed to fetch workspaces:", error);
+        toast.error("Failed to fetch workspace", { position: "top-center" });
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -61,9 +67,13 @@ const DashboardComponent = () => {
         <p className="text-muted-foreground">
           Get started by creating your first workspace.
         </p>
-        <Button onClick={() => console.log("Open Create Modal")}>
-          Create Workspace
-        </Button>
+        <CreateWorkspaceModal
+          trigger={
+            <Button onClick={() => console.log("Open Create Modal")}>
+              Create Workspace
+            </Button>
+          }
+        />
       </div>
     );
   }
@@ -85,15 +95,20 @@ const DashboardComponent = () => {
           >
             <h3 className="font-bold text-lg">{workspace.name}</h3>
             <p className="text-xs text-muted-foreground mt-2">
-              Created: {format(new Date(workspace.created_at), "dd-MMM-yyyy")}
+              Created:{" "}
+              {format(new Date(workspace.created_at), "dd-MMM-yyyy hh:mm a")}
             </p>
           </div>
         ))}
 
-        <button className="flex items-center justify-center gap-2 p-5 border-2 border-dashed rounded-lg hover:bg-accent transition-colors">
-          <Plus size={16} />
-          <span className="text-sm font-medium">New Workspace</span>
-        </button>
+        <CreateWorkspaceModal
+          trigger={
+            <button className="flex items-center justify-center gap-2 p-5 border-2 border-dashed rounded-lg hover:bg-accent transition-colors">
+              <Plus size={16} />
+              <span className="text-sm font-medium">New Workspace</span>
+            </button>
+          }
+        />
       </div>
     </div>
   );
