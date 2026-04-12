@@ -14,6 +14,7 @@ import { WorkspaceForm } from "./workspace-form";
 import { useAuthStore } from "@/store/auth.store";
 import { workspaceService } from "@/lib/services";
 import { toast } from "sonner";
+import { useWorkspaceStore } from "@/store/workspace.store";
 
 interface CreateWorkspaceModalProps {
   trigger: React.ReactNode;
@@ -27,6 +28,7 @@ export function CreateWorkspaceModal({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((s) => s.user);
+  const addWorkspace = useWorkspaceStore((s) => s.addWorkspace)
 
   const handleCreate = async (workspaceName: string) => {
     setLoading(true);
@@ -45,6 +47,8 @@ export function CreateWorkspaceModal({
       toast.success("Workspace created successfully", {
         position: "top-center",
       });
+      addWorkspace(workspace);
+      setOpen(false);
     } catch (error) {
       console.error(error);
       toast.error("Unable to create workspace", { position: "top-center" });
