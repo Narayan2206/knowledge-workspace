@@ -11,12 +11,14 @@ import { FolderPlus, Plus } from "lucide-react";
 import { CreateWorkspaceModal } from "@/components/workspaces/create-workspace-modal";
 import { toast } from "sonner";
 import { useWorkspaceStore } from "@/store/workspace.store";
+import { useRouter } from "next/navigation";
 
 const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
   const workspaces = useWorkspaceStore((s) => s.workspaces)
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces)
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     let isMounted = true;
@@ -94,6 +96,7 @@ const DashboardComponent = () => {
           <div
             key={workspace.id}
             className="p-5 border rounded-lg hover:border-primary transition-colors cursor-pointer bg-card shadow-sm"
+            onClick={() => router.push(`/workspace/${workspace.slug}`)}
           >
             <h3 className="font-bold text-lg">{workspace.name}</h3>
             <p className="text-xs text-muted-foreground mt-2">
