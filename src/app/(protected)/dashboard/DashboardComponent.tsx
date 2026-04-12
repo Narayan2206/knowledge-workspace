@@ -10,10 +10,12 @@ import { format } from "date-fns";
 import { FolderPlus, Plus } from "lucide-react";
 import { CreateWorkspaceModal } from "@/components/workspaces/create-workspace-modal";
 import { toast } from "sonner";
+import { useWorkspaceStore } from "@/store/workspace.store";
 
 const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
-  const [workspaces, setWorkspaces] = useState<Workspaces[]>([]);
+  const workspaces = useWorkspaceStore((s) => s.workspaces)
+  const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces)
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const DashboardComponent = () => {
         }
       } catch (error) {
         console.error("Failed to fetch workspaces:", error);
-        toast.error("Failed to fetch workspace", { position: "top-center" });
+        toast.error("Failed to fetch workspaces", { position: "top-center" });
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -69,7 +71,7 @@ const DashboardComponent = () => {
         </p>
         <CreateWorkspaceModal
           trigger={
-            <Button onClick={() => console.log("Open Create Modal")}>
+            <Button>
               Create Workspace
             </Button>
           }
