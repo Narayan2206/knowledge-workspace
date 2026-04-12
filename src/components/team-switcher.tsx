@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
 import {
   DropdownMenu,
@@ -10,39 +10,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { ChevronDownIcon, PlusIcon } from "lucide-react"
+} from "@/components/ui/sidebar";
+import { ChevronDownIcon, PlusIcon } from "lucide-react";
+import { Workspaces } from "@/lib/supabase/models";
+import { CreateWorkspaceModal } from "./workspaces/create-workspace-modal";
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string
-    logo: React.ReactNode
-    plan: string
-  }[]
-}) {
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+export function TeamSwitcher({ workspaces }: { workspaces: Workspaces[] }) {
+  const [activeTeam, setActiveTeam] = React.useState("adwads");
 
   if (!activeTeam) {
-    return null
+    return null;
   }
-
+  console.log("WORKSPACES ", workspaces);
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton className="w-fit px-1.5">
-              <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+              {/* <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
                 {activeTeam.logo}
-              </div>
-              <span className="truncate font-medium">{activeTeam.name}</span>
+              </div> */}
+              <span className="truncate font-medium">
+                Active Workspace name
+              </span>
               <ChevronDownIcon className="opacity-50" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -53,31 +49,38 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              Workspaces
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {workspaces.map((workspace) => (
               <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
+                key={workspace.id}
+                onClick={() => {}}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-xs border">
-                  {team.logo}
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                {/* <div className="flex size-6 items-center justify-center rounded-xs border">
+                  {workspace.logo}
+                </div> */}
+                {workspace.name}
+                {/* <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut> */}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <PlusIcon className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
-            </DropdownMenuItem>
+
+            <CreateWorkspaceModal
+              trigger={
+                <DropdownMenuItem className="gap-2 p-2" onSelect={(e) => e.preventDefault()}>
+                  <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                    <PlusIcon className="size-4" />
+                  </div>
+                  <div className="font-medium text-muted-foreground">
+                    Add workspace
+                  </div>
+                </DropdownMenuItem>
+              }
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

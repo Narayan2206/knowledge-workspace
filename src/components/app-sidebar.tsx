@@ -14,6 +14,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon } from "lucide-react"
+import { useWorkspaceStore } from "@/store/workspace.store"
 
 // This is sample data.
 const data = {
@@ -283,10 +284,13 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const workspaces = useWorkspaceStore((s) => s.workspaces);
+
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher workspaces={workspaces} />
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
