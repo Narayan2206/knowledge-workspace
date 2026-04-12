@@ -66,6 +66,7 @@ const Auth = ({ type }: AuthProps) => {
       );
       toast.error(
         `Some error occurred while ${type === "login" ? "logging" : "signing"} in`,
+        {position: "top-center"}
       );
     }
 

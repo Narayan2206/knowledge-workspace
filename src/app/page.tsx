@@ -10,10 +10,10 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await logOut();
-      toast.success("Logged out successfully");
+      toast.success("Logged out successfully", {position: "top-center"});
     } catch (error) {
       console.error("Error logging out ", error);
-      toast.error("Error logging out");
+      toast.error("Error logging out", {position: "top-center"});
     }
   };
   return (
