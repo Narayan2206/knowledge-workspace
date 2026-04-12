@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { signInWithEmail, signUpNewUser } from "@/features/auth";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/schema/auth.schema";
 import { z } from "zod";
+import { toast } from "sonner";
+import { MailCheck } from "lucide-react";
 
 type AuthProps = {
   type: "login" | "signup";
@@ -29,10 +32,11 @@ type FormValues = z.infer<typeof loginSchema> | z.infer<typeof signupSchema>;
 const Auth = ({ type }: AuthProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const schema = type === "login" ? loginSchema : signupSchema;
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -41,33 +45,62 @@ const Auth = ({ type }: AuthProps) => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log("DATA ", data);
-    
     setLoading(true);
-    let response: any = {};
-    if (type === "login") {
-      response = await signInWithEmail(data.email, data.password);
-    } else {
-      response = await signUpNewUser(
-        data.email,
-        data.password,
-        "name" in data ? data.name : "",
+    try {
+      let response: any = {};
+      if (type === "login") {
+        response = await signInWithEmail(data.email, data.password);
+        router.replace("/dashboard");
+      } else {
+        response = await signUpNewUser(
+          data.email,
+          data.password,
+          "name" in data ? data.name : "",
+        );
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error(
+        `Some error occurred while ${type === "login" ? "logging" : "signing"} in`,
+        error,
+      );
+      toast.error(
+        `Some error occurred while ${type === "login" ? "logging" : "signing"} in`,
       );
     }
 
-    console.log("RESPONSE ", response);
-
-    if (response.error) {
-      console.error("Some error occurred while logging in ", response.error);
-    } else {
-      if (type === "login") {
-        router.replace("/dashboard");
-      } else if (type === "signup") {
-        alert("Check your email to confirm your account before logging in.");
-      }
-    }
     setLoading(false);
   };
+
+  if (type === "signup" && isSubmitted) {
+    return (
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MailCheck className="text-green-600" /> Check your email
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert variant="default" className="border-green-200 bg-green-50">
+            <AlertTitle className="text-green-800">Success!</AlertTitle>
+            <AlertDescription className="text-green-700">
+              We've sent a confirmation link to your email. Please verify your
+              account before logging in.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+        <CardFooter>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => router.push("/login")}
+          >
+            Back to Login
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-sm">

@@ -1,6 +1,10 @@
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client";
 
-export async function signUpNewUser(email:string, password:string, name: string) {
+export async function signUpNewUser(
+  email: string,
+  password: string,
+  name: string,
+) {
   const supabaseBrowserClient = createClient();
   const { data, error } = await supabaseBrowserClient.auth.signUp({
     email,
@@ -8,24 +12,30 @@ export async function signUpNewUser(email:string, password:string, name: string)
     options: {
       emailRedirectTo: `${location.origin}/authcallback`,
       data: {
-        name
-      }
+        name,
+      },
     },
-  })
-  return {data, error}
+  });
+
+  if (error) throw error;
+
+  return data;
 }
 
-export async function signInWithEmail(email:string, password:string) {
+export async function signInWithEmail(email: string, password: string) {
   const supabaseBrowserClient = createClient();
   const { data, error } = await supabaseBrowserClient.auth.signInWithPassword({
     email,
     password,
-  })
-  return {data, error}
+  });
+
+  if (error) throw error;
+
+  return data;
 }
 
-export async function logOut(){
+export async function logOut() {
   const supabaseBrowserClient = createClient();
-  const {error} = await supabaseBrowserClient.auth.signOut();
-  return error
+  const { error } = await supabaseBrowserClient.auth.signOut();
+  if (error) throw error;
 }
