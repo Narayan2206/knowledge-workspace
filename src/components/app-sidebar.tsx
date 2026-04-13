@@ -16,6 +16,9 @@ import {
 import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon } from "lucide-react"
 import { useWorkspaceStore } from "@/store/workspace.store"
 import { WorkspaceSwitcher } from "./workspace-switcher"
+import { useAuthStore } from "@/store/auth.store"
+import { workspaceService } from "@/lib/services"
+import { toast } from "sonner"
 
 // This is sample data.
 const data = {
@@ -285,8 +288,43 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {user} = useAuthStore();
+  const {workspaces, setWorkspaces} = useWorkspaceStore();
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    let isMounted = true;
+    if (workspaces.length === 0) {
+    const fetchWorkspaces = async () => {
+      if (!user?.id) {
+        toast.error("User is not authenticated", { position: "top-center" });
+        return;
+      }
 
-  const workspaces = useWorkspaceStore((s) => s.workspaces);
+      try {
+        setIsLoading(true);
+        const data = await workspaceService.getAllWorkspaces(user.id);
+        console.log("RESPONSE ", data);
+
+        if (isMounted) {
+          setWorkspaces(data || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch workspaces:", error);
+        toast.error("Failed to fetch workspaces", { position: "top-center" });
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchWorkspaces();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, workspaces.length]);
 
   return (
     <Sidebar className="border-r-0" {...props}>
