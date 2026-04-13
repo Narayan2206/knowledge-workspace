@@ -13,7 +13,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon } from "lucide-react"
+import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon, LayoutDashboard } from "lucide-react"
 import { useWorkspaceStore } from "@/store/workspace.store"
 import { WorkspaceSwitcher } from "./workspace-switcher"
 import { useAuthStore } from "@/store/auth.store"
@@ -22,32 +22,32 @@ import { toast } from "sonner"
 
 // This is sample data.
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: (
-        <TerminalIcon
-        />
-      ),
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: (
-        <AudioLinesIcon
-        />
-      ),
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: (
-        <TerminalIcon
-        />
-      ),
-      plan: "Free",
-    },
-  ],
+  // teams: [
+  //   {
+  //     name: "Acme Inc",
+  //     logo: (
+  //       <TerminalIcon
+  //       />
+  //     ),
+  //     plan: "Enterprise",
+  //   },
+  //   {
+  //     name: "Acme Corp.",
+  //     logo: (
+  //       <AudioLinesIcon
+  //       />
+  //     ),
+  //     plan: "Startup",
+  //   },
+  //   {
+  //     name: "Evil Corp.",
+  //     logo: (
+  //       <TerminalIcon
+  //       />
+  //     ),
+  //     plan: "Free",
+  //   },
+  // ],
   navMain: [
     // {
     //   title: "Search",
@@ -67,22 +67,20 @@ const data = {
     // },
     {
       title: "Home",
-      url: "#",
+      url: "/",
       icon: (
         <HomeIcon
         />
       ),
-      isActive: true,
     },
-    // {
-    //   title: "Inbox",
-    //   url: "#",
-    //   icon: (
-    //     <InboxIcon
-    //     />
-    //   ),
-    //   badge: "10",
-    // },
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: (
+        <LayoutDashboard
+        />
+      ),
+    },
   ],
   navSecondary: [
     // {
@@ -93,14 +91,14 @@ const data = {
     //     />
     //   ),
     // },
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
-    },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: (
+    //     <Settings2Icon
+    //     />
+    //   ),
+    // },
     // {
     //   title: "Templates",
     //   url: "#",
@@ -109,14 +107,14 @@ const data = {
     //     />
     //   ),
     // },
-    {
-      title: "Trash",
-      url: "#",
-      icon: (
-        <Trash2Icon
-        />
-      ),
-    },
+    // {
+    //   title: "Trash",
+    //   url: "#",
+    //   icon: (
+    //     <Trash2Icon
+    //     />
+    //   ),
+    // },
     // {
     //   title: "Help",
     //   url: "#",
