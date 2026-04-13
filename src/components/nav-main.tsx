@@ -5,6 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { usePathname } from 'next/navigation'
 
@@ -23,14 +24,14 @@ export function NavMain({
   return (
     <SidebarMenu>
       {items.map((item) => {
-        const isActivePath = pathname.includes(item.url);
+        const isActivePath = pathname === item.url || pathname.startsWith(`${item.url}/`);
         return (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild isActive={isActivePath} onClick={() => router.push(item.url)}>
-            <a href={item.url}>
+          <SidebarMenuButton asChild isActive={isActivePath}>
+            <Link href={item.url}>
               {item.icon}
               <span>{item.title}</span>
-            </a>
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       )})}
