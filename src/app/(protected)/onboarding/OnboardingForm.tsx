@@ -6,6 +6,7 @@ import { workspaceService } from "@/lib/services";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 function OnboardingForm() {
   const [workspaceName, setWorkspaceName] = useState("");
@@ -18,7 +19,7 @@ function OnboardingForm() {
     e.preventDefault();
 
     if (!user) {
-      alert("User is not authenticated");
+      toast.error("User is not authenticated", { position: "top-center" });
       return;
     }
 
@@ -34,7 +35,7 @@ function OnboardingForm() {
       }
     } catch (error) {
       console.error(error);
-      alert("Unable to Create workspace");
+      toast.error("Unable to Create workspace", { position: "top-center" });
     }
   };
 
