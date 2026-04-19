@@ -97,7 +97,7 @@ export function WorkspaceSwitcher() {
 
 const WorkspaceItemSkeleton = () => (
   <div className="flex items-center gap-2 p-2">
-    <div className="size-6 animate-pulse rounded-md bg-muted" />
-    <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+    {/* <div className="size-6 animate-pulse rounded-md bg-muted" /> */}
+    <div className="h-4 w-32 animate-pulse rounded bg-muted" />
   </div>
 );
