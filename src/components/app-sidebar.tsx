@@ -1,24 +1,37 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { NavFavorites } from "@/components/nav-favorites"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavWorkspaces } from "@/components/nav-workspaces"
+import { NavFavorites } from "@/components/nav-favorites";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavWorkspaces } from "@/components/nav-workspaces";
 // import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon, LayoutDashboard } from "lucide-react"
-import { useWorkspaceStore } from "@/store/workspace.store"
-import { WorkspaceSwitcher } from "./workspace-switcher"
-import { useAuthStore } from "@/store/auth.store"
-import { workspaceService } from "@/lib/services"
-import { toast } from "sonner"
+} from "@/components/ui/sidebar";
+import {
+  TerminalIcon,
+  AudioLinesIcon,
+  SearchIcon,
+  SparklesIcon,
+  HomeIcon,
+  InboxIcon,
+  CalendarIcon,
+  Settings2Icon,
+  BlocksIcon,
+  Trash2Icon,
+  MessageCircleQuestionIcon,
+  LayoutDashboard,
+} from "lucide-react";
+import { useWorkspaceStore } from "@/store/workspace.store";
+import { WorkspaceSwitcher } from "./workspace-switcher";
+import { useAuthStore } from "@/store/auth.store";
+import { workspaceService } from "@/lib/services";
+import { toast } from "sonner";
 
 // This is sample data.
 const data = {
@@ -68,18 +81,12 @@ const data = {
     {
       title: "Home",
       url: "/",
-      icon: (
-        <HomeIcon
-        />
-      ),
+      icon: <HomeIcon />,
     },
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: (
-        <LayoutDashboard
-        />
-      ),
+      icon: <LayoutDashboard />,
     },
   ],
   navSecondary: [
@@ -283,40 +290,37 @@ const data = {
     //   ],
     // },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {user} = useAuthStore();
-  const {workspaces, setWorkspaces} = useWorkspaceStore();
-  const [isLoading, setIsLoading] = React.useState(true);
+  const { user } = useAuthStore();
+  const { workspaces, setWorkspaces, setIsLoadingWorkspaces } = useWorkspaceStore();
   React.useEffect(() => {
     let isMounted = true;
     if (workspaces.length === 0) {
-    const fetchWorkspaces = async () => {
-      if (!user?.id) {
-        toast.error("User is not authenticated", { position: "top-center" });
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const data = await workspaceService.getAllWorkspaces(user.id);
-        console.log("RESPONSE ", data);
-
-        if (isMounted) {
-          setWorkspaces(data || []);
+      const fetchWorkspaces = async () => {
+        if (!user?.id) {
+          toast.error("User is not authenticated", { position: "top-center" });
+          return;
         }
-      } catch (error) {
-        console.error("Failed to fetch workspaces:", error);
-        toast.error("Failed to fetch workspaces", { position: "top-center" });
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
 
-    fetchWorkspaces();
+        try {
+          const data = await workspaceService.getAllWorkspaces(user.id);
+
+          if (isMounted) {
+            setWorkspaces(data || []);
+          }
+        } catch (error) {
+          console.error("Failed to fetch workspaces:", error);
+          toast.error("Failed to fetch workspaces", { position: "top-center" });
+        } finally {
+          if (isMounted) {
+            setIsLoadingWorkspaces(false);
+          }
+        }
+      };
+
+      fetchWorkspaces();
     }
 
     return () => {
@@ -327,7 +331,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
-        <WorkspaceSwitcher workspaces={workspaces} />
+        <WorkspaceSwitcher />
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
@@ -337,5 +341,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
