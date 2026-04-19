@@ -6,7 +6,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { usePathname } from 'next/navigation'
 
 export function NavMain({
@@ -19,7 +18,6 @@ export function NavMain({
     isActive?: boolean
   }[]
 }) {
-  const router = useRouter();
   const pathname = usePathname();  
   return (
     <SidebarMenu>
