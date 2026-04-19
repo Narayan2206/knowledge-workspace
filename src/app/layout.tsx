@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { WorkspaceStateCleaner } from "@/components/workspaces/workspace-state-cleaner";
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <WorkspaceStateCleaner />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
