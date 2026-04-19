@@ -16,14 +16,17 @@ import {
 import { ChevronDownIcon, PlusIcon } from "lucide-react";
 import { CreateWorkspaceModal } from "./workspaces/create-workspace-modal";
 import { useWorkspaceStore } from "@/store/workspace.store";
-import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 
 export function WorkspaceSwitcher() {
   const workspaces = useWorkspaceStore((s) => s.workspaces);
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
   const isLoadingActive = useWorkspaceStore((s) => s.isLoadingActiveWorkspace);
+  const setIsLoadingActiveWorkspace = useWorkspaceStore((s) => s.setIsLoadingActiveWorkspace);
   const isLoadingWorkspaces = useWorkspaceStore((s) => s.isLoadingWorkspaces);
-
+  const router = useRouter();
+  const params = useParams();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,11 +62,19 @@ export function WorkspaceSwitcher() {
               ))
             ) : workspaces.length > 0 ? (
               workspaces.map((workspace) => (
-                <Link href={`/workspace/${workspace.slug}`} key={workspace.id}>
-                  <DropdownMenuItem className="gap-2 p-2">
-                    {workspace.name}
-                  </DropdownMenuItem>
-                </Link>
+                <DropdownMenuItem
+                  className="gap-2 p-2"
+                  key={workspace.id}
+                  onSelect={(e) => {
+                    if (workspace.slug === params.slug) return;
+                    e.preventDefault();
+                    setActiveWorkspace(null);
+                    setIsLoadingActiveWorkspace(true);
+                    router.push(`/workspace/${workspace.slug}`);
+                  }}
+                >
+                  {workspace.name}
+                </DropdownMenuItem>
               ))
             ) : (
               <div className="p-2 text-xs text-muted-foreground">

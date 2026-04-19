@@ -11,7 +11,7 @@ interface WorkspaceState {
 
   setWorkspaces: (workspaces: Workspaces[]) => void;
   addWorkspace: (newWorkspace: Workspaces) => void;
-  setActiveWorkspace: (workspace: Workspaces) => void;
+  setActiveWorkspace: (workspace: Workspaces | null) => void;
   setIsLoadingWorkspaces: (loading: boolean) => void;
   setIsLoadingActiveWorkspace: (loading: boolean) => void;
 
