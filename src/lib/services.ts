@@ -16,6 +16,18 @@ export const workspaceService = {
     return data || [];
   },
 
+  async getWorkspaceBySlug(slug: string): Promise<Workspaces> {
+    const { data, error } = await supabase
+      .from("workspaces")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  },
+
   async createWorkspace(
     workspace: Omit<Workspaces, "id" | "created_at">,
   ): Promise<Workspaces> {
