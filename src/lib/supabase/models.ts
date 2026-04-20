@@ -26,7 +26,7 @@ export interface Documents {
     id: string;
     workspace_id: string;
     title: string;
-    content: string;
+    content: unknown;
     created_by: string;
     updated_at: string;
     created_at: string;
