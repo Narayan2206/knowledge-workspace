@@ -32,6 +32,7 @@ import { WorkspaceSwitcher } from "./workspace-switcher";
 import { useAuthStore } from "@/store/auth.store";
 import { workspaceService } from "@/lib/services";
 import { toast } from "sonner";
+import { NavDocuments } from "./nav-documents";
 
 // This is sample data.
 const data = {
@@ -336,7 +337,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* <NavFavorites favorites={data.favorites} /> */}
-        <NavWorkspaces workspaces={data.workspaces} />
+        <NavDocuments />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarRail />
