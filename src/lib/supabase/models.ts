@@ -1,3 +1,4 @@
+import { Content } from "@tiptap/react";
 export interface Users {
     id: string;
     name: string;
@@ -26,7 +27,7 @@ export interface Documents {
     id: string;
     workspace_id: string;
     title: string;
-    content: unknown;
+    content: Content;
     created_by: string;
     updated_at: string;
     created_at: string;
