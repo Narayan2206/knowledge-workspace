@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { WorkspaceMembers, Workspaces } from "./supabase/models";
+import { Documents, WorkspaceMembers, Workspaces } from "./supabase/models";
 
 const supabase = createClient();
 
@@ -99,3 +99,21 @@ export const workspaceMemberDataService = {
   //   return workspace;
   // },
 };
+
+export const workspaceDocumentService = {
+  async createDocument(
+    document: Omit<Documents, "id" | "created_at" | "updated_at" | "is_archived">,
+  ): Promise<Documents> {
+    console.log("PAYLOAD ", document);
+    
+    const { data, error } = await supabase
+      .from("documents")
+      .insert(document)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  },
+}
