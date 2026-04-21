@@ -135,4 +135,19 @@ export const workspaceDocumentService = {
 
     return data;
   },
+
+  async getDocumentsByWorkspaceId(
+    workspace_id: string,
+  ): Promise<Partial<Pick<Documents, "id" | "title" | "workspace_id" | "updated_at">>[]> {
+    
+    const { data, error } = await supabase
+      .from("documents")
+      .select("id, title, workspace_id, updated_at")
+      .eq("workspace_id", workspace_id)
+      .order("updated_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data;
+  },
 }
