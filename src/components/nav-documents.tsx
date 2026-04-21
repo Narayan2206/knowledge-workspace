@@ -23,6 +23,7 @@ import { workspaceDocumentService } from "@/lib/services"
 import { useWorkspaceStore } from "@/store/workspace.store"
 import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
+import { useDocumentStore } from "@/store/document.store"
 
 const defaultContent = {
   type: "doc",
@@ -36,6 +37,8 @@ const defaultContent = {
 export function NavDocuments() {
   const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
   const user = useAuthStore((s) => s.user);
+  const documents = useDocumentStore((s) => s.documents);
+  const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
 
   async function handleCreateDocument() {
     if(!activeWorkspace || !user) return;
@@ -67,16 +70,17 @@ export function NavDocuments() {
     </div>
       <SidebarGroupContent>
         <SidebarMenu>
-          {[].map((workspace:any) => (
-            <Collapsible key={workspace.name}>
-              <SidebarMenuItem>
+          {isLoadingDocuments ? Array.from({ length: 3 }).map((_, i) => (
+                <WorkspaceItemSkeleton key={i} />
+              ))  : (documents.map((doc) => (
+            // <Collapsible key={doc.id}>
+              <SidebarMenuItem key={doc.id}>
                 <SidebarMenuButton asChild>
                   <a href="#">
-                    <span>{workspace.emoji}</span>
-                    <span>{workspace.name}</span>
+                    <span>{doc.title}</span>
                   </a>
                 </SidebarMenuButton>
-                <CollapsibleTrigger asChild>
+                {/* <CollapsibleTrigger asChild>
                   <SidebarMenuAction
                     className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
                     showOnHover
@@ -84,28 +88,14 @@ export function NavDocuments() {
                     <ChevronRightIcon
                     />
                   </SidebarMenuAction>
-                </CollapsibleTrigger>
+                </CollapsibleTrigger> */}
                 <SidebarMenuAction showOnHover>
                   <PlusIcon
                   />
                 </SidebarMenuAction>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {workspace.pages.map((page:any) => (
-                      <SidebarMenuSubItem key={page.name}>
-                        <SidebarMenuSubButton asChild>
-                          <a href="#">
-                            <span>{page.emoji}</span>
-                            <span>{page.name}</span>
-                          </a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
               </SidebarMenuItem>
-            </Collapsible>
-          ))}
+            // </Collapsible>
+          )))}
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
               <MoreHorizontalIcon
@@ -118,3 +108,10 @@ export function NavDocuments() {
     </SidebarGroup>
   )
 }
+
+const WorkspaceItemSkeleton = () => (
+  <div className="flex items-center gap-2 p-2">
+    {/* <div className="size-6 animate-pulse rounded-md bg-muted" /> */}
+    <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+  </div>
+);
