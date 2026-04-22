@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Content } from "@tiptap/react";
 import { useDocumentStore } from "@/store/document.store";
+import { getClientSupabase } from "@/lib/supabase/client";
 
 
 const WorkspaceComponent = () => {
@@ -15,8 +16,8 @@ const WorkspaceComponent = () => {
   const { setIsLoadingActiveWorkspace, setActiveWorkspace } =
     useWorkspaceStore();
   const { setDocuments, setIsLoadingDocuments } = useDocumentStore();
+  const supabase = getClientSupabase();
 
-  const [content, setContent] = useState<Content | null>(null);
 
   useEffect(() => {
     if (!params.slug) return;
@@ -24,9 +25,10 @@ const WorkspaceComponent = () => {
     const initializeWorkspaceData = async () => {
       try {
         const workspace = await workspaceService.getWorkspaceBySlug(
+          supabase,
           params.slug,
         );
-        const docs = await workspaceDocumentService.getDocumentsByWorkspaceId(workspace.id);
+        const docs = await workspaceDocumentService.getDocumentsByWorkspaceId(supabase, workspace.id);
         setDocuments(docs);
         setActiveWorkspace(workspace);
       } catch (error) {
@@ -45,7 +47,6 @@ const WorkspaceComponent = () => {
   return (
     <>
       <div>Workspace</div>
-      <Tiptap content={content} onChange={setContent} />
     </>
   );
 };
