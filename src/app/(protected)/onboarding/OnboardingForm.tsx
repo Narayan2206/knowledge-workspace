@@ -3,6 +3,7 @@
 import CustomInput from "@/components/CustomInput/CustomInput";
 import { Button } from "@/components/ui/button";
 import { workspaceService } from "@/lib/services";
+import { getClientSupabase } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,6 +13,7 @@ function OnboardingForm() {
   const [workspaceName, setWorkspaceName] = useState("");
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
+  const supabase = getClientSupabase();
 
   const handleCreateWorkspace = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -24,7 +26,7 @@ function OnboardingForm() {
     }
 
     try {
-        const workspace = await workspaceService.createWorkspace({
+        const workspace = await workspaceService.createWorkspace(supabase, {
           name: workspaceName,
           slug: `${Date.now()}-${Math.random()}`,
           created_by: user.id,

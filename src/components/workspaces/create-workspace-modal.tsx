@@ -15,6 +15,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { workspaceService } from "@/lib/services";
 import { toast } from "sonner";
 import { useWorkspaceStore } from "@/store/workspace.store";
+import { getClientSupabase } from "@/lib/supabase/client";
 
 interface CreateWorkspaceModalProps {
   trigger: React.ReactNode;
@@ -29,6 +30,7 @@ export function CreateWorkspaceModal({
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((s) => s.user);
   const addWorkspace = useWorkspaceStore((s) => s.addWorkspace)
+  const supabase = getClientSupabase();
 
   const handleCreate = async (workspaceName: string) => {
     setLoading(true);
@@ -38,7 +40,7 @@ export function CreateWorkspaceModal({
     }
 
     try {
-      const workspace = await workspaceService.createWorkspace({
+      const workspace = await workspaceService.createWorkspace(supabase, {
         name: workspaceName,
         slug: `${Date.now()}-${Math.random()}`,
         created_by: user.id,

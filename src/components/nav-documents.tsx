@@ -24,6 +24,7 @@ import { useWorkspaceStore } from "@/store/workspace.store"
 import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
 import { useDocumentStore } from "@/store/document.store"
+import { getClientSupabase } from "@/lib/supabase/client"
 
 const defaultContent = {
   type: "doc",
@@ -39,11 +40,12 @@ export function NavDocuments() {
   const user = useAuthStore((s) => s.user);
   const documents = useDocumentStore((s) => s.documents);
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
+  const supabase = getClientSupabase();
 
   async function handleCreateDocument() {
     if(!activeWorkspace || !user) return;
   try {
-    const newDoc = await workspaceDocumentService.createDocument({
+    const newDoc = await workspaceDocumentService.createDocument(supabase, {
       workspace_id: activeWorkspace.id,
       title: "Untitled",
       content: defaultContent,

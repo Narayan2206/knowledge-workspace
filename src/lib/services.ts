@@ -1,10 +1,8 @@
-import { createClient } from "@/lib/supabase/client";
 import { Documents, WorkspaceMembers, Workspaces } from "./supabase/models";
-
-const supabase = createClient();
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export const workspaceService = {
-  async getAllWorkspaces(userId: string): Promise<Workspaces[]> {
+  async getAllWorkspaces(supabase: SupabaseClient, userId: string): Promise<Workspaces[]> {
     const { data, error } = await supabase
       .from("workspaces")
       .select("*")
@@ -16,7 +14,7 @@ export const workspaceService = {
     return data || [];
   },
 
-  async getWorkspaceBySlug(slug: string): Promise<Workspaces> {
+  async getWorkspaceBySlug(supabase: SupabaseClient, slug: string): Promise<Workspaces> {
     const { data, error } = await supabase
       .from("workspaces")
       .select("*")
@@ -29,6 +27,7 @@ export const workspaceService = {
   },
 
   async createWorkspace(
+    supabase: SupabaseClient,
     workspace: Omit<Workspaces, "id" | "created_at">,
   ): Promise<Workspaces> {
     console.log("PAYLOAD ", workspace);
@@ -48,6 +47,7 @@ export const workspaceService = {
 export const workspaceMemberService = {
   // TODO
   async getWorkspaceMembers(
+    supabase: SupabaseClient,
     userId: string,
     workspaceId: string,
   ): Promise<WorkspaceMembers[]> {
@@ -63,6 +63,7 @@ export const workspaceMemberService = {
   },
 
   async addWorkspaceMember(
+    supabase: SupabaseClient,
     workspace_member: Omit<WorkspaceMembers, "id" | "joined_at">,
   ): Promise<WorkspaceMembers> {
     const { data, error } = await supabase
@@ -102,6 +103,7 @@ export const workspaceMemberDataService = {
 
 export const workspaceDocumentService = {
   async createDocument(
+    supabase: SupabaseClient,
     document: Omit<Documents, "id" | "created_at" | "updated_at" | "is_archived">,
   ): Promise<Documents> {
     console.log("PAYLOAD ", document);
@@ -118,6 +120,7 @@ export const workspaceDocumentService = {
   },
 
   async updateDocument(
+    supabase: SupabaseClient,
     id: string,
     updates: Partial<Pick<Documents, "title" | "content" | "is_archived">>
   ): Promise<Documents> {
@@ -137,6 +140,7 @@ export const workspaceDocumentService = {
   },
 
   async getDocumentsByWorkspaceId(
+    supabase: SupabaseClient,
     workspace_id: string,
   ): Promise<Partial<Pick<Documents, "id" | "title" | "workspace_id" | "updated_at">>[]> {
     

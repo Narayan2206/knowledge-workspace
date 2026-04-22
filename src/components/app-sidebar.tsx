@@ -33,6 +33,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { workspaceService } from "@/lib/services";
 import { toast } from "sonner";
 import { NavDocuments } from "./nav-documents";
+import { getClientSupabase } from "@/lib/supabase/client";
 
 // This is sample data.
 const data = {
@@ -296,6 +297,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
   const { workspaces, setWorkspaces, setIsLoadingWorkspaces } = useWorkspaceStore();
+  const supabase = getClientSupabase();
   React.useEffect(() => {
     let isMounted = true;
     if (workspaces.length === 0) {
@@ -306,7 +308,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         }
 
         try {
-          const data = await workspaceService.getAllWorkspaces(user.id);
+          const data = await workspaceService.getAllWorkspaces(supabase, user.id);
 
           if (isMounted) {
             setWorkspaces(data || []);

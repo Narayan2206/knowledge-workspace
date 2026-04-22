@@ -12,6 +12,7 @@ import { CreateWorkspaceModal } from "@/components/workspaces/create-workspace-m
 import { toast } from "sonner";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { useRouter } from "next/navigation";
+import { getClientSupabase } from "@/lib/supabase/client";
 
 const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
@@ -19,6 +20,7 @@ const DashboardComponent = () => {
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces)
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const supabase = getClientSupabase();
 
   useEffect(() => {
     let isMounted = true;
@@ -30,7 +32,7 @@ const DashboardComponent = () => {
 
       try {
         setIsLoading(true);
-        const data = await workspaceService.getAllWorkspaces(user.id);
+        const data = await workspaceService.getAllWorkspaces(supabase, user.id);
         console.log("RESPONSE ", data);
 
         if (isMounted) {
