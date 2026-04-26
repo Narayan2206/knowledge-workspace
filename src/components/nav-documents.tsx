@@ -75,28 +75,13 @@ export function NavDocuments() {
           {isLoadingDocuments ? Array.from({ length: 3 }).map((_, i) => (
                 <WorkspaceItemSkeleton key={i} />
               ))  : (documents.map((doc) => (
-            // <Collapsible key={doc.id}>
               <SidebarMenuItem key={doc.id}>
                 <SidebarMenuButton asChild>
                   <a href="#">
                     <span>{doc.title}</span>
                   </a>
                 </SidebarMenuButton>
-                {/* <CollapsibleTrigger asChild>
-                  <SidebarMenuAction
-                    className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
-                    showOnHover
-                  >
-                    <ChevronRightIcon
-                    />
-                  </SidebarMenuAction>
-                </CollapsibleTrigger> */}
-                <SidebarMenuAction showOnHover>
-                  <PlusIcon
-                  />
-                </SidebarMenuAction>
               </SidebarMenuItem>
-            // </Collapsible>
           )))}
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
