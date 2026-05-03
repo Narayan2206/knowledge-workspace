@@ -61,7 +61,7 @@ export function NavDocuments() {
   return (
     <SidebarGroup>
       <div className="flex items-center justify-between px-2">
-      <SidebarGroupLabel>Documents</SidebarGroupLabel>
+      <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
       <Button
       variant="ghost"
       onClick={handleCreateDocument}
