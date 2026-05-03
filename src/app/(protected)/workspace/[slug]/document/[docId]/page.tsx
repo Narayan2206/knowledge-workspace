@@ -1,14 +1,14 @@
-"use client";
-import { useParams } from "next/navigation";
+import { workspaceDocumentService } from "@/lib/services";
+import { getServerSupabase } from "@/lib/supabase/server";
 
-function Document() {
-  const params = useParams();
-  console.log("Document PARAMS ", params);
+export default async function Document({ params }: { params: Promise<{slug: string, docId: string}> }) {
+  const {docId} = await params; 
+  const supabase = await getServerSupabase();
+  const document = await workspaceDocumentService.getDocumentById(supabase, docId);
+  
   return (
     <>
       <p>document</p>
     </>
   );
 }
-
-export default Document;
