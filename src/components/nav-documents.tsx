@@ -90,6 +90,7 @@ export function NavDocuments() {
                 <SidebarMenuButton 
                 isActive={doc.id === params.docId}
                 asChild
+                className="cursor-pointer"
                 onClick={(e) => {
                   if(doc.id === params.docId) return;
                   e.preventDefault();
