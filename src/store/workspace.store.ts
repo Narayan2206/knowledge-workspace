@@ -25,7 +25,7 @@ const initialState = {
   members: [],
   currentUserRole: null,
   isLoadingWorkspaces: true,
-  isLoadingActiveWorkspace: true,
+  isLoadingActiveWorkspace: false,
 };
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({

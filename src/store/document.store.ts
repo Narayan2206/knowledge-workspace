@@ -19,7 +19,7 @@ interface DocumentState {
 const initialState = {
   documents: [],
   activeDocument: null,
-  isLoadingDocuments: true,
+  isLoadingDocuments: false,
 };
 export const useDocumentStore = create<DocumentState>((set) => ({
   ...initialState,
