@@ -17,10 +17,12 @@ import { ChevronDownIcon, PlusIcon } from "lucide-react";
 import { CreateWorkspaceModal } from "./workspaces/create-workspace-modal";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { useParams, useRouter } from "next/navigation";
+import { useWorkspace } from "./workspaces/workspace-provider";
 
 export function WorkspaceSwitcher() {
   const workspaces = useWorkspaceStore((s) => s.workspaces);
-  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  // const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  const {workspace: activeWorkspace} = useWorkspace();
   const setActiveWorkspace = useWorkspaceStore((s) => s.setActiveWorkspace);
   const isLoadingActive = useWorkspaceStore((s) => s.isLoadingActiveWorkspace);
   const setIsLoadingActiveWorkspace = useWorkspaceStore((s) => s.setIsLoadingActiveWorkspace);
@@ -68,8 +70,8 @@ export function WorkspaceSwitcher() {
                   onSelect={(e) => {
                     if (workspace.slug === params.slug) return;
                     e.preventDefault();
-                    setActiveWorkspace(null);
-                    setIsLoadingActiveWorkspace(true);
+                    // setActiveWorkspace(null);
+                    // setIsLoadingActiveWorkspace(true);
                     router.push(`/workspace/${workspace.slug}`);
                   }}
                 >
