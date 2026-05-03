@@ -12,37 +12,37 @@ import { getClientSupabase } from "@/lib/supabase/client";
 
 
 const WorkspaceComponent = () => {
-  const params = useParams<{ slug: string }>();
-  const { setIsLoadingActiveWorkspace, setActiveWorkspace } =
-    useWorkspaceStore();
-  const { setDocuments, setIsLoadingDocuments } = useDocumentStore();
-  const supabase = getClientSupabase();
+  // const params = useParams<{ slug: string }>();
+  // const { setIsLoadingActiveWorkspace, setActiveWorkspace } =
+  //   useWorkspaceStore();
+  // const { setDocuments, setIsLoadingDocuments } = useDocumentStore();
+  // const supabase = getClientSupabase();
 
 
-  useEffect(() => {
-    if (!params.slug) return;
+  // useEffect(() => {
+  //   if (!params.slug) return;
 
-    const initializeWorkspaceData = async () => {
-      try {
-        const workspace = await workspaceService.getWorkspaceBySlug(
-          supabase,
-          params.slug,
-        );
-        const docs = await workspaceDocumentService.getDocumentsByWorkspaceId(supabase, workspace.id);
-        setDocuments(docs);
-        setActiveWorkspace(workspace);
-      } catch (error) {
-        console.error(error);
-        toast.error("Error fetching current workspace data", {
-          position: "top-center",
-        });
-      } finally {
-        setIsLoadingActiveWorkspace(false);
-        setIsLoadingDocuments(false);
-      }
-    };
-    initializeWorkspaceData();
-  }, [params.slug]);
+    // const initializeWorkspaceData = async () => {
+    //   try {
+    //     const workspace = await workspaceService.getWorkspaceBySlug(
+    //       supabase,
+    //       params.slug,
+    //     );
+    //     const docs = await workspaceDocumentService.getDocumentsByWorkspaceId(supabase, workspace.id);
+    //     setDocuments(docs);
+    //     setActiveWorkspace(workspace);
+    //   } catch (error) {
+    //     console.error(error);
+    //     toast.error("Error fetching current workspace data", {
+    //       position: "top-center",
+    //     });
+    //   } finally {
+    //     setIsLoadingActiveWorkspace(false);
+    //     setIsLoadingDocuments(false);
+    //   }
+    // };
+    // initializeWorkspaceData();
+  // }, [params.slug]);
 
   return (
     <>
