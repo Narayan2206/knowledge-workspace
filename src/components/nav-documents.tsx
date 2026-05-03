@@ -27,6 +27,7 @@ import { useDocumentStore } from "@/store/document.store"
 import { getClientSupabase } from "@/lib/supabase/client"
 import { useWorkspace } from "./workspaces/workspace-provider"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const defaultContent = {
   type: "doc",
@@ -45,6 +46,7 @@ export function NavDocuments() {
   const { documents } = useWorkspace();
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
+  const router = useRouter();
 
   async function handleCreateDocument() {
     if(!activeWorkspace || !user) return;
@@ -57,6 +59,10 @@ export function NavDocuments() {
     });
 
     console.log("Created doc:", newDoc);
+    router.push(
+      `/workspace/${activeWorkspace.slug}/document/${newDoc.id}`
+    );
+    router.refresh();
   } catch (err) {
     console.error(err);
     toast.error("Error creating document ", { position: "top-center" });
@@ -67,6 +73,7 @@ export function NavDocuments() {
       <div className="flex items-center justify-between px-2">
       <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
       <Button
+      size={"xs"}
       variant="ghost"
       onClick={handleCreateDocument}
       className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
@@ -87,13 +94,13 @@ export function NavDocuments() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
           )))}
-          <SidebarMenuItem>
+          {/* <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
               <MoreHorizontalIcon
               />
               <span>More</span>
             </SidebarMenuButton>
-          </SidebarMenuItem>
+          </SidebarMenuItem> */}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
