@@ -25,6 +25,8 @@ import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
 import { useDocumentStore } from "@/store/document.store"
 import { getClientSupabase } from "@/lib/supabase/client"
+import { useWorkspace } from "./workspaces/workspace-provider"
+import Link from "next/link"
 
 const defaultContent = {
   type: "doc",
@@ -36,9 +38,11 @@ const defaultContent = {
 };
 
 export function NavDocuments() {
-  const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  // const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
+  const {workspace: activeWorkspace} = useWorkspace();
   const user = useAuthStore((s) => s.user);
-  const documents = useDocumentStore((s) => s.documents);
+  // const documents = useDocumentStore((s) => s.documents);
+  const { documents } = useWorkspace();
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
 
@@ -77,9 +81,9 @@ export function NavDocuments() {
               ))  : (documents.map((doc) => (
               <SidebarMenuItem key={doc.id}>
                 <SidebarMenuButton asChild>
-                  <a href="#">
+                  <Link href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}>
                     <span>{doc.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
           )))}
