@@ -26,8 +26,7 @@ import { toast } from "sonner"
 import { useDocumentStore } from "@/store/document.store"
 import { getClientSupabase } from "@/lib/supabase/client"
 import { useWorkspace } from "./workspaces/workspace-provider"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
 const defaultContent = {
   type: "doc",
@@ -47,6 +46,7 @@ export function NavDocuments() {
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
   const router = useRouter();
+  const params = useParams();
 
   async function handleCreateDocument() {
     if(!activeWorkspace || !user) return;
@@ -87,10 +87,16 @@ export function NavDocuments() {
                 <WorkspaceItemSkeleton key={i} />
               ))  : (documents.map((doc) => (
               <SidebarMenuItem key={doc.id}>
-                <SidebarMenuButton asChild>
-                  <Link href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}>
-                    <span>{doc.title}</span>
-                  </Link>
+                <SidebarMenuButton 
+                isActive={doc.id === params.docId}
+                asChild
+                onClick={(e) => {
+                  if(doc.id === params.docId) return;
+                  e.preventDefault();
+                  router.push(`/workspace/${activeWorkspace.slug}/document/${doc.id}`)
+                }}
+                >
+                  <span>{doc.title}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
           )))}
