@@ -154,4 +154,20 @@ export const workspaceDocumentService = {
 
     return data;
   },
+
+  async getDocumentById(
+    supabase: SupabaseClient,
+    document_id: string,
+  ): Promise<Documents> {
+    
+    const { data, error } = await supabase
+      .from("documents")
+      .select("*")
+      .eq("id", document_id)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  },
 }
