@@ -122,19 +122,24 @@ export const workspaceDocumentService = {
   async updateDocument(
     supabase: SupabaseClient,
     id: string,
-    updates: Partial<Pick<Documents, "title" | "content" | "is_archived">>
+    updates: Partial<Pick<Documents, "title" | "content" | "is_archived">>,
+    workspace_id: string,
   ): Promise<Documents> {
+    
     const { data, error } = await supabase
       .from("documents")
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
-      })
+      // .update({
+      //   ...updates,
+      //   updated_at: new Date().toISOString(),
+      // })
+      .update(updates)
       .eq("id", id)
+      .eq("workspace_id", workspace_id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
+    if (!data) throw new Error("Document not found after update");
 
     return data;
   },

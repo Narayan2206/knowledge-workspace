@@ -1,5 +1,6 @@
 import { workspaceDocumentService } from "@/lib/services";
 import { getServerSupabase } from "@/lib/supabase/server";
+import DocumentEditor from "./DocumentEditor";
 
 export default async function Document({ params }: { params: Promise<{slug: string, docId: string}> }) {
   const {docId} = await params; 
@@ -8,7 +9,7 @@ export default async function Document({ params }: { params: Promise<{slug: stri
   
   return (
     <>
-      <p>document</p>
+      <DocumentEditor document={document} />
     </>
   );
 }
