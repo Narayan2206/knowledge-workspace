@@ -42,13 +42,17 @@ export default function DocumentEditor({ document }: { document: Documents }) {
 
   return (
     <div>
-      <CustomInput
-        value={title}
-        onChange={setTitle}
-        placeholder="Untitled Document"
-      />
+      <div className="mb-4">
+        <CustomInput
+          value={title}
+          onChange={setTitle}
+          placeholder="Untitled Document"
+        />
+      </div>
 
-      <Tiptap content={content} onChange={setContent} />
+      <div className="min-h-[50vh] flex">
+        <Tiptap content={content} onChange={setContent} />
+      </div>
     </div>
   );
 }

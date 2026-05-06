@@ -14,7 +14,7 @@ const Tiptap = ({content, onChange}: {content:Content | null; onChange: (content
     },
   });
 
-  return <EditorContent editor={editor} />;
+  return <EditorContent editor={editor} className="flex-1" />;
 };
 
 export default Tiptap;
