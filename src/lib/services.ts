@@ -78,7 +78,7 @@ export const workspaceMemberService = {
   },
 };
 
-export const workspaceMemberDataService = {
+// export const workspaceMemberDataService = {
   //! async createWorkspaceAndAddMember(data: {
   //   name: string;
   //   slug: string;
@@ -99,7 +99,7 @@ export const workspaceMemberDataService = {
 
   //   return workspace;
   // },
-};
+// };
 
 export const workspaceDocumentService = {
   async createDocument(
