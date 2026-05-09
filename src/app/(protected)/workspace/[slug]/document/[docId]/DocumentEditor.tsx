@@ -43,7 +43,7 @@ export default function DocumentEditor({ document }: { document: Documents }) {
           setIsSaving(false);
         }
       }, 1000),
-    [document.id, document.workspace_id, router, supabase],
+    [document.id, document.workspace_id, router],
   );
 
   useEffect(() => {
