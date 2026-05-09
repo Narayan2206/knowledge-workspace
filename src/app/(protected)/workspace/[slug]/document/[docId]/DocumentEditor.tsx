@@ -5,53 +5,79 @@ import { workspaceDocumentService } from "@/lib/services";
 import { getClientSupabase } from "@/lib/supabase/client";
 import { Documents } from "@/lib/supabase/models";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Content } from "@tiptap/react";
+import { debounce } from "@/lib/helpers/debounce";
 
 export default function DocumentEditor({ document }: { document: Documents }) {
   const [title, setTitle] = useState(document.title);
   const [content, setContent] = useState(document.content);
   const supabase = getClientSupabase();
   const router = useRouter();
-  console.log("DOCUMENT CLIENT ", document);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const saveDocument = async () => {
-    try {
-      const payload = {
-        title: title.length === 0 ? "Untitled Document" : title,
-        content,
-      };
-      await workspaceDocumentService.updateDocument(
-        supabase,
-        document.id,
-        payload,
-        document.workspace_id,
-      );
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const debouncedSave = useMemo(
+    () =>
+      debounce(async (title, content) => {
+        try {
+          setIsSaving(true);
+          console.log("SAVING DOCUMENT...", title, content);
+
+          const payload = {
+            title: title.trim().length === 0 ? "Untitled Document" : title,
+            content,
+          };
+          await workspaceDocumentService.updateDocument(
+            supabase,
+            document.id,
+            payload,
+            document.workspace_id,
+          );
+          console.log("DOCUMENT SAVED");
+          router.refresh();
+        } catch (err) {
+          console.error(err);
+          toast.error("Error saving document", { position: "top-center" });
+        } finally {
+          setIsSaving(false);
+        }
+      }, 1000),
+    [document.id, document.workspace_id, router, supabase],
+  );
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      saveDocument();
-    }, 1000);
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [debouncedSave]);
 
-    return () => clearTimeout(timeout);
-  }, [title, content]);
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
+    debouncedSave(newTitle, content);
+  };
+
+  const handleContentChange = (newContent: Content) => {
+    setContent(newContent);
+    debouncedSave(title, newContent);
+  };
 
   return (
     <div>
       <div className="mb-4">
         <CustomInput
           value={title}
-          onChange={setTitle}
+          onChange={handleTitleChange}
           placeholder="Untitled Document"
         />
       </div>
 
+      <div className="mb-2 text-sm text-muted-foreground">
+        {isSaving ? "Saving..." : "Saved"}
+      </div>
+
       <div className="min-h-[50vh] flex">
-        <Tiptap content={content} onChange={setContent} />
+        <Tiptap content={content} onChange={handleContentChange} />
       </div>
     </div>
   );
