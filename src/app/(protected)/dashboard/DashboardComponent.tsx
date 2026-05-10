@@ -18,7 +18,9 @@ const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
   const workspaces = useWorkspaceStore((s) => s.workspaces)
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces)
-  const [isLoading, setIsLoading] = useState(true);
+  const setIsLoadingWorkspaces = useWorkspaceStore((s) => s.setIsLoadingWorkspaces)
+  const isLoadingWorkspaces = useWorkspaceStore((s) => s.isLoadingWorkspaces)
+  // const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const supabase = getClientSupabase();
 
@@ -31,7 +33,6 @@ const DashboardComponent = () => {
       }
 
       try {
-        setIsLoading(true);
         const data = await workspaceService.getAllWorkspaces(supabase, user.id);
         console.log("RESPONSE ", data);
 
@@ -43,7 +44,7 @@ const DashboardComponent = () => {
         toast.error("Failed to fetch workspaces", { position: "top-center" });
       } finally {
         if (isMounted) {
-          setIsLoading(false);
+          setIsLoadingWorkspaces(false);
         }
       }
     };
@@ -55,7 +56,7 @@ const DashboardComponent = () => {
     };
   }, [user]);
 
-  if (isLoading) {
+  if (isLoadingWorkspaces) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Spinner className="size-8" />
