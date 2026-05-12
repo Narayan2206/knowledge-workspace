@@ -31,7 +31,7 @@ export default function AuthCallback() {
     return () => {
       isMounted = false;
     };
-  }, [router, supabase]);
+  }, [router]);
 
   return (
     <main className="h-screen">
