@@ -1,4 +1,3 @@
-// app/(dashboard)/workspace/[slug]/document/[documentId]/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
