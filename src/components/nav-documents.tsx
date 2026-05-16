@@ -39,10 +39,9 @@ const defaultContent = {
 
 export function NavDocuments() {
   // const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
-  const {workspace: activeWorkspace} = useWorkspace();
+  const {workspace: activeWorkspace, documents} = useWorkspace();
   const user = useAuthStore((s) => s.user);
   // const documents = useDocumentStore((s) => s.documents);
-  const { documents } = useWorkspace();
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
   const router = useRouter();
