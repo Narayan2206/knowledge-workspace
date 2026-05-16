@@ -124,7 +124,7 @@ export const workspaceDocumentService = {
     id: string,
     updates: Partial<Pick<Documents, "title" | "content" | "is_archived">>,
     workspace_id: string,
-  ): Promise<Documents> {
+  ): Promise<Documents|null> {
     
     const { data, error } = await supabase
       .from("documents")
@@ -163,13 +163,13 @@ export const workspaceDocumentService = {
   async getDocumentById(
     supabase: SupabaseClient,
     document_id: string,
-  ): Promise<Documents> {
+  ): Promise<Documents|null> {
     
     const { data, error } = await supabase
       .from("documents")
       .select("*")
       .eq("id", document_id)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
 
