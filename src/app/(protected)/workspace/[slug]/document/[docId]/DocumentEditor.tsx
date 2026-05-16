@@ -52,6 +52,26 @@ export default function DocumentEditor({ document }: { document: Documents }) {
     };
   }, [debouncedSave]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Ctrl+S or Cmd+S
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault(); 
+        
+        toast.info("Changes are saved automatically!", {
+          position: "top-center",
+          duration: 2000,
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
     debouncedSave(newTitle, content);
