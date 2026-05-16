@@ -14,7 +14,7 @@ export async function signUpNewUser(
     email,
     password,
     options: {
-      emailRedirectTo: `${location.origin}/authcallback`,
+      emailRedirectTo: `${location.origin}/auth/callback`,
       data: {
         name,
       },
