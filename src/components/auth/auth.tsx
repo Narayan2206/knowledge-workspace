@@ -22,6 +22,7 @@ import { loginSchema, signupSchema } from "@/schema/auth.schema";
 import { z } from "zod";
 import { toast } from "sonner";
 import { MailCheck } from "lucide-react";
+import { getClientSupabase } from "@/lib/supabase/client";
 
 type AuthProps = {
   type: "login" | "signup";
@@ -50,7 +51,18 @@ const Auth = ({ type }: AuthProps) => {
       let response: any = {};
       if (type === "login") {
         response = await signInWithEmail(data.email, data.password);
-        router.replace("/dashboard");
+        
+        if(response?.user?.email_confirmed_at){
+          router.replace("/dashboard");
+        } else {
+          await getClientSupabase().auth.signOut();
+
+          router.replace(
+            `/verify-email?email=${encodeURIComponent(
+              data.email
+            )}`
+          );
+        }
       } else {
         response = await signUpNewUser(
           data.email,
