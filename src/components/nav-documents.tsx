@@ -93,7 +93,10 @@ export function NavDocuments() {
               ))}
           {documents.length === 0 && (
             <SidebarMenuItem>
-              <SidebarMenuButton className="text-sidebar-foreground/70">
+              <SidebarMenuButton 
+              className="text-sidebar-foreground/70"
+              onClick={handleCreateDocument}
+              >
                 <PlusIcon />
                 <span>New Document</span>
               </SidebarMenuButton>
