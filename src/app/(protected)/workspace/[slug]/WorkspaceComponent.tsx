@@ -1,12 +1,8 @@
 "use client";
 
-import { workspaceDocumentService, workspaceService } from "@/lib/services";
-import { useWorkspaceStore } from "@/store/workspace.store";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { workspaceDocumentService } from "@/lib/services";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Content } from "@tiptap/react";
-import { useDocumentStore } from "@/store/document.store";
 import { getClientSupabase } from "@/lib/supabase/client";
 import { useWorkspace } from "@/components/workspaces/workspace-provider";
 import { useAuthStore } from "@/store/auth.store";
@@ -29,16 +25,6 @@ const WorkspaceComponent = () => {
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
   const supabase = getClientSupabase();
-
-  const sortedDocuments = useMemo(() => {
-    if (!documents) return [];
-
-    return [...documents].sort((a, b) => {
-      const timeA = a.updated_at ? Date.parse(a.updated_at) : 0;
-      const timeB = b.updated_at ? Date.parse(b.updated_at) : 0;
-      return timeB - timeA;
-    });
-  }, [documents]);
 
   async function handleCreateDocument() {
     if (!activeWorkspace || !user) return;
@@ -70,7 +56,7 @@ const WorkspaceComponent = () => {
             Manage and edit your workspace documents.
           </p>
         </div>
-        {sortedDocuments && sortedDocuments.length > 0 && (
+        {documents && documents.length > 0 && (
           <Button onClick={handleCreateDocument} size="sm" className="gap-2">
             <PlusIcon className="size-4" />
             New Document
@@ -78,7 +64,7 @@ const WorkspaceComponent = () => {
         )}
       </div>
 
-      {!sortedDocuments || sortedDocuments.length === 0 ? (
+      {!documents || documents.length === 0 ? (
         <div className="flex flex-col items-center justify-center border border-dashed rounded-xl p-16 text-center bg-muted/20 my-auto">
           <div className="flex size-12 items-center justify-center rounded-lg border bg-background shadow-sm mb-4">
             <FileTextIcon className="size-6 text-muted-foreground" />
@@ -95,7 +81,7 @@ const WorkspaceComponent = () => {
         </div>
       ) : (
         <div className="grid gap-3">
-          {sortedDocuments.map((doc) => (
+          {documents.map((doc) => (
             <Link
               key={doc.id}
               href={`/workspace/${activeWorkspace?.slug}/document/${doc.id}`}
