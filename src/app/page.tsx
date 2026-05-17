@@ -1,34 +1,90 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { logOut } from "@/features/auth";
-import { useAuthStore } from "@/store/auth.store";
+
 import Link from "next/link";
-import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth.store";
+import LogoutButton from "@/components/auth/logout-button";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon, LayoutDashboardIcon, SparklesIcon } from "lucide-react";
 
 export default function Home() {
   const user = useAuthStore((s) => s.user);
-  const handleLogout = async () => {
-    try {
-      await logOut();
-      toast.success("Logged out successfully", {position: "top-center"});
-    } catch (error) {
-      console.error("Error logging out ", error);
-      toast.error("Error logging out", {position: "top-center"});
-    }
-  };
+
   return (
-    <header>
-      <div>
-        {user ? (
-          <Button onClick={handleLogout}>Logout</Button>
-        ) : (
-          <>
-            <Link href={"/login"}>Login</Link>
-            <Link href={"/signup"}>Signup</Link>
-          </>
-        )}
-      </div>
-      {user && <p>Welcome {user?.user_metadata?.email}</p>}
-    </header>
+    <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-zinc-800">
+      <nav className="flex items-center justify-between p-4 max-w-6xl w-full mx-auto border-b border-zinc-900">
+        <div className="flex items-center gap-2 font-semibold tracking-tight text-lg">
+          <div className="size-6 rounded bg-foreground flex items-center justify-center text-background font-bold text-xs">
+            S
+          </div>
+          <span>Slate</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {user ? (
+            <>
+              <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <Link href="/dashboard" className="gap-2">
+                  <LayoutDashboardIcon className="size-4" />
+                  Dashboard
+                </Link>
+              </Button>
+              <LogoutButton variant="outline" />
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild size="sm" className="bg-foreground text-background hover:bg-zinc-200">
+                <Link href="/signup">Sign up</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </nav>
+
+      <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-3xl mx-auto my-auto">
+      
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/30 text-xs text-muted-foreground mb-6 animate-fade-in">
+          <SparklesIcon className="size-3 text-zinc-400" />
+          <span>A minimal space for structured thinking</span>
+        </div>
+
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-foreground to-muted-foreground max-w-2xl leading-tight">
+          Workspaces built for your dynamic documents.
+        </h1>
+
+        <p className="text-sm sm:text-base text-muted-foreground max-w-lg mt-4 mb-8 leading-relaxed">
+          Create environments, organize files cleanly, and capture your thoughts without the configuration clutter. Fast, distraction-free execution.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          {user ? (
+            <div className="space-y-4">
+              <Button asChild size="lg" className="gap-2 bg-foreground text-background hover:bg-zinc-200 shadow-sm">
+                <Link href="/dashboard">
+                  Go to Dashboard
+                  <ArrowRightIcon className="size-4" />
+                </Link>
+              </Button>
+              <p className="text-xs text-muted-foreground block">
+                Logged in as <span className="text-zinc-400 font-medium">{user?.user_metadata?.email || user?.email}</span>
+              </p>
+            </div>
+          ) : (
+            <Button asChild size="lg" className="gap-2 bg-foreground text-background hover:bg-zinc-200 shadow-sm">
+              <Link href="/signup">
+                Get Started Free
+                <ArrowRightIcon className="size-4" />
+              </Link>
+            </Button>
+          )}
+        </div>
+      </main>
+
+      <footer className="p-6 text-center text-xs text-muted-foreground border-t border-zinc-900 max-w-6xl w-full mx-auto">
+        &copy; {new Date().getFullYear()} Slate Inc. All rights reserved.
+      </footer>
+    </div>
   );
 }
