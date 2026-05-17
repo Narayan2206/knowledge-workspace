@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/schema/auth.schema";
 import { z } from "zod";
 import { toast } from "sonner";
-import { MailCheck } from "lucide-react";
+import { Loader2Icon, MailCheck } from "lucide-react";
 import { getClientSupabase } from "@/lib/supabase/client";
 
 type AuthProps = {
@@ -196,7 +196,16 @@ const Auth = ({ type }: AuthProps) => {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button className="w-full" type="submit" disabled={loading}>
-            {type === "login" ? "Continue" : "Get Started"}
+            {loading ? (
+              <>
+                <Loader2Icon className="size-4 animate-spin text-background" />
+                <span>Please wait...</span>
+              </>
+            ) : type === "login" ? (
+              "Continue"
+            ) : (
+              "Get Started"
+            )}
           </Button>
         </CardFooter>
       </form>
