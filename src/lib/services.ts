@@ -14,12 +14,12 @@ export const workspaceService = {
     return data || [];
   },
 
-  async getWorkspaceBySlug(supabase: SupabaseClient, slug: string): Promise<Workspaces> {
+  async getWorkspaceBySlug(supabase: SupabaseClient, slug: string): Promise<Workspaces|null> {
     const { data, error } = await supabase
       .from("workspaces")
       .select("*")
       .eq("slug", slug)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
 

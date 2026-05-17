@@ -4,6 +4,7 @@ import SidebarComponent from "@/components/Sidebar/SidebarComponent";
 import { WorkspaceProvider } from "@/components/workspaces/workspace-provider";
 import { workspaceDocumentService, workspaceService } from "@/lib/services";
 import { getServerSupabase } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 
 export default async function SidebarServer({
   slug,
@@ -15,6 +16,10 @@ export default async function SidebarServer({
   const supabase = await getServerSupabase();
 
   const workspace = await workspaceService.getWorkspaceBySlug(supabase, slug);
+
+  if(!workspace){
+    notFound();
+  }
 
   const documents = await workspaceDocumentService.getDocumentsByWorkspaceId(
     supabase,
