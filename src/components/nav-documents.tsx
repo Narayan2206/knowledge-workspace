@@ -59,14 +59,16 @@ export function NavDocuments() {
     <SidebarGroup>
       <div className="flex items-center justify-between px-2">
         <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
-        <Button
-          size={"xs"}
-          variant="ghost"
-          onClick={handleCreateDocument}
-          className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
-        >
-          <PlusIcon className="w-4 h-4" />
-        </Button>
+        {documents.length > 0 && (
+          <Button
+            size={"xs"}
+            variant="ghost"
+            onClick={handleCreateDocument}
+            className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
+          >
+            <PlusIcon className="w-4 h-4" />
+          </Button>
+        )}
       </div>
       <SidebarGroupContent>
         <SidebarMenu>
@@ -89,13 +91,14 @@ export function NavDocuments() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-          {/* <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
-              <MoreHorizontalIcon
-              />
-              <span>More</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem> */}
+          {documents.length === 0 && (
+            <SidebarMenuItem>
+              <SidebarMenuButton className="text-sidebar-foreground/70">
+                <PlusIcon />
+                <span>New Document</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
