@@ -51,16 +51,14 @@ const Auth = ({ type }: AuthProps) => {
       let response: any = {};
       if (type === "login") {
         response = await signInWithEmail(data.email, data.password);
-        
-        if(response?.user?.email_confirmed_at){
+
+        if (response?.user?.email_confirmed_at) {
           router.replace("/dashboard");
         } else {
           await getClientSupabase().auth.signOut();
 
           router.replace(
-            `/verify-email?email=${encodeURIComponent(
-              data.email
-            )}`
+            `/verify-email?email=${encodeURIComponent(data.email)}`,
           );
         }
       } else {
@@ -71,15 +69,14 @@ const Auth = ({ type }: AuthProps) => {
         );
         setIsSubmitted(true);
       }
-    } catch (error) {
-      console.error(
-        `Some error occurred while ${type === "login" ? "logging" : "signing"} in`,
-        error,
-      );
-      toast.error(
-        `Some error occurred while ${type === "login" ? "logging" : "signing"} in`,
-        {position: "top-center"}
-      );
+    } catch (error: any) {
+      console.error(error);
+      let message = type === "login" ? "Login failed" : "Signup failed";
+
+      if (error?.message) {
+        message = error.message;
+      }
+      toast.error(message, { position: "top-center" });
     }
 
     setLoading(false);
