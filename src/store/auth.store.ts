@@ -1,14 +1,16 @@
-import { create } from "zustand"
-import { User } from "@supabase/supabase-js"
+import { create } from "zustand";
+import { User } from "@supabase/supabase-js";
 
 type AuthState = {
-  user: User | null
-  loading: boolean
-  setUser: (user: User | null) => void
-}
+  user: User | null;
+  isLoading: boolean;
+  setUser: (user: User | null) => void;
+  setLoading: (v: boolean) => void;
+};
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  loading: true,
-  setUser: (user) => set({ user, loading: false }),
-}))
+  isLoading: true,
+  setUser: (user) => set({ user }),
+  setLoading: (isLoading) => set({ isLoading }),
+}));

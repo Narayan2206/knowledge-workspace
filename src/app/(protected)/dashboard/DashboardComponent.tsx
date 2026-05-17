@@ -16,6 +16,7 @@ import { getClientSupabase } from "@/lib/supabase/client";
 
 const DashboardComponent = () => {
   const user = useAuthStore((s) => s.user);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const workspaces = useWorkspaceStore((s) => s.workspaces)
   const setWorkspaces = useWorkspaceStore((s) => s.setWorkspaces)
   const setIsLoadingWorkspaces = useWorkspaceStore((s) => s.setIsLoadingWorkspaces)
@@ -27,8 +28,7 @@ const DashboardComponent = () => {
   useEffect(() => {
     let isMounted = true;
     const fetchWorkspaces = async () => {
-      if (!user?.id) {
-        toast.error("User is not authenticated", { position: "top-center" });
+      if (!user?.id || isLoading) {
         return;
       }
 

@@ -295,15 +295,14 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   const { workspaces, setWorkspaces, setIsLoadingWorkspaces } = useWorkspaceStore();
   const supabase = getClientSupabase();
   React.useEffect(() => {
     let isMounted = true;
     if (workspaces.length === 0) {
       const fetchWorkspaces = async () => {
-        if (!user?.id) {
-          toast.error("User is not authenticated", { position: "top-center" });
+        if (!user?.id || isLoading) {
           return;
         }
 
