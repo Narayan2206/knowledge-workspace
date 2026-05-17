@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { getClientSupabase } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function AuthCallback() {
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = getClientSupabase();
 
   useEffect(() => {
     let isMounted = true;
@@ -16,7 +16,6 @@ export default function AuthCallback() {
         data: { user },
         error,
       } = await supabase.auth.getUser();
-      console.log("USER DATA ", user);
 
       if (isMounted) {
         if (error || !user) {
