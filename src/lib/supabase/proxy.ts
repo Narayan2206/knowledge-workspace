@@ -38,9 +38,16 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
+  const protectedRoutes = [
+    "/dashboard",
+    "/account",
+    "/workspace"
+  ];
+
   const isProtectedRoute =
-    pathname.startsWith('/dashboard') ||
-    pathname.startsWith('/account')
+    protectedRoutes.some(route =>
+      pathname.startsWith(route)
+    );
 
   if (!user && isProtectedRoute) {
     // no user, potentially respond by redirecting the user to the login page
