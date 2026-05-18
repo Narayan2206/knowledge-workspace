@@ -61,6 +61,7 @@ const Auth = ({ type }: AuthProps) => {
             `/verify-email?email=${encodeURIComponent(data.email)}`,
           );
         }
+        return;
       } else {
         response = await signUpNewUser(
           data.email,
@@ -77,9 +78,8 @@ const Auth = ({ type }: AuthProps) => {
         message = error.message;
       }
       toast.error(message, { position: "top-center" });
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   if (type === "signup" && isSubmitted) {
