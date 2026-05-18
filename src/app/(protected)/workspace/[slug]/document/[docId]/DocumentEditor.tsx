@@ -17,10 +17,14 @@ export default function DocumentEditor({ document }: { document: Documents }) {
   const supabase = getClientSupabase();
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const debouncedSave = useMemo(
     () =>
       debounce(async (title, content) => {
+        if (!navigator.onLine) {
+          return;
+        }
         try {
           setIsSaving(true);
           console.log("SAVING DOCUMENT...", title, content);
@@ -73,6 +77,30 @@ export default function DocumentEditor({ document }: { document: Documents }) {
     };
   }, []);
 
+  useEffect(() => {
+    setIsOnline(navigator.onLine);
+
+    const handleOnline = () => {
+      setIsOnline(true);
+      toast.success("Back online", { position: "top-center" });
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      toast.error("You're offline", { position: "top-center" });
+    };
+
+    window.addEventListener("online", handleOnline);
+
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
     debouncedSave(newTitle, content);
@@ -82,6 +110,21 @@ export default function DocumentEditor({ document }: { document: Documents }) {
     setContent(newContent);
     debouncedSave(title, newContent);
   };
+
+  let saveStatus;
+
+  if (!isOnline) {
+    saveStatus = <p className="flex items-center gap-2">Offline</p>;
+  } else if (isSaving) {
+    saveStatus = (
+      <p className="flex items-center gap-2">
+        <Loader2Icon className="size-4 animate-spin" />
+        Saving...
+      </p>
+    );
+  } else {
+    saveStatus = "Saved";
+  }
 
   return (
     <div>
@@ -94,16 +137,7 @@ export default function DocumentEditor({ document }: { document: Documents }) {
       </div>
 
       <div className="mb-2 text-sm text-muted-foreground">
-        {isSaving ? (
-          <>
-            <p className="flex items-center gap-2">
-              <Loader2Icon className="size-4 animate-spin" />
-              Saving...
-            </p>
-          </>
-        ) : (
-          "Saved"
-        )}
+        {saveStatus}
       </div>
 
       <div className="min-h-[50vh] flex">
