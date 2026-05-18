@@ -8,7 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import BreadcrumbComponent from "./BreadcrumbComponent";
+// import BreadcrumbComponent from "./BreadcrumbComponent";
 
 export default function SidebarComponent({
   children,
@@ -26,7 +26,7 @@ export default function SidebarComponent({
               orientation="vertical"
               className="mr-2 data-vertical:h-4 data-vertical:self-auto"
             />
-            <BreadcrumbComponent />
+            {/* <BreadcrumbComponent /> */}
           </div>
           {/* <div className="ml-auto px-3">
             <NavActions />
