@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Content } from "@tiptap/react";
 import { debounce } from "@/lib/helpers/debounce";
+import { Loader2Icon } from "lucide-react";
 
 export default function DocumentEditor({ document }: { document: Documents }) {
   const [title, setTitle] = useState(document.title);
@@ -56,8 +57,8 @@ export default function DocumentEditor({ document }: { document: Documents }) {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Check for Ctrl+S or Cmd+S
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
-        e.preventDefault(); 
-        
+        e.preventDefault();
+
         toast.info("Changes are saved automatically!", {
           position: "top-center",
           duration: 2000,
@@ -66,7 +67,7 @@ export default function DocumentEditor({ document }: { document: Documents }) {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -93,7 +94,16 @@ export default function DocumentEditor({ document }: { document: Documents }) {
       </div>
 
       <div className="mb-2 text-sm text-muted-foreground">
-        {isSaving ? "Saving..." : "Saved"}
+        {isSaving ? (
+          <>
+            <p className="flex items-center gap-2">
+              <Loader2Icon className="size-4 animate-spin" />
+              Saving...
+            </p>
+          </>
+        ) : (
+          "Saved"
+        )}
       </div>
 
       <div className="min-h-[50vh] flex">
