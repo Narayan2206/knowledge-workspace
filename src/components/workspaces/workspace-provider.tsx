@@ -8,6 +8,7 @@ type WorkspaceContextType = {
   documents: Partial<
     Pick<Documents, "id" | "title" | "workspace_id" | "updated_at">
   >[];
+  role: "owner" | "editor" | "viewer";
 };
 
 const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
@@ -15,16 +16,18 @@ const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
 export function WorkspaceProvider({
   workspace,
   documents,
+  role,
   children,
 }: {
   workspace: Workspaces;
   documents: Partial<
     Pick<Documents, "id" | "title" | "workspace_id" | "updated_at">
   >[];
+  role: "owner" | "editor" | "viewer";
   children: React.ReactNode;
 }) {
   return (
-    <WorkspaceContext.Provider value={{ workspace, documents }}>
+    <WorkspaceContext.Provider value={{ workspace, documents, role }}>
       {children}
     </WorkspaceContext.Provider>
   );
