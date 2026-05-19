@@ -4,10 +4,11 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { PlusIcon } from "lucide-react";
+import { Ellipsis, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button } from "./ui/button";
 import { workspaceDocumentService } from "@/lib/services";
 import { useAuthStore } from "@/store/auth.store";
@@ -17,6 +18,12 @@ import { getClientSupabase } from "@/lib/supabase/client";
 import { useWorkspace } from "./workspaces/workspace-provider";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const defaultContent = {
   type: "doc",
@@ -28,10 +35,13 @@ const defaultContent = {
 };
 
 export function NavDocuments() {
-  // const activeWorkspace = useWorkspaceStore((s) => s.activeWorkspace);
-  const { workspace: activeWorkspace, documents } = useWorkspace();
+  const {
+    workspace: activeWorkspace,
+    documents,
+    role: memberRole,
+  } = useWorkspace();
+  const CAN_DELETE_DOCUMENTS = memberRole === "owner";
   const user = useAuthStore((s) => s.user);
-  // const documents = useDocumentStore((s) => s.documents);
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
   const router = useRouter();
@@ -89,13 +99,35 @@ export function NavDocuments() {
                       <span>{doc.title}</span>
                     </Link>
                   </SidebarMenuButton>
+                  {CAN_DELETE_DOCUMENTS && (<DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction>
+                        <Ellipsis />
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      side="right"
+                      align="start"
+                      className="w-48 bg-zinc-950 border-zinc-800 text-zinc-300"
+                    >
+                      <DropdownMenuItem
+                        onClick={() => {
+                          console.log("Delete document", doc.id);
+                        }}
+                        className="gap-2 text-red-400 focus:text-red-400 focus:bg-red-950/30 cursor-pointer"
+                      >
+                        <Trash2Icon className="size-4" />
+                        <span>Delete document</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>)}
                 </SidebarMenuItem>
               ))}
           {documents.length === 0 && (
             <SidebarMenuItem>
-              <SidebarMenuButton 
-              className="text-sidebar-foreground/70"
-              onClick={handleCreateDocument}
+              <SidebarMenuButton
+                className="text-sidebar-foreground/70"
+                onClick={handleCreateDocument}
               >
                 <PlusIcon />
                 <span>New Document</span>
