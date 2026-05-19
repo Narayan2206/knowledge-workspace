@@ -20,7 +20,7 @@ export interface WorkspaceMembers {
     workspace_id: string;
     user_id: string;
     joined_at: string;
-    role: 'owner' | 'admin' | 'editor' | 'viewer';
+    role: 'owner' | 'editor' | 'viewer';
 }
 
 export interface Documents {
