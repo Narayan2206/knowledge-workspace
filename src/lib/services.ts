@@ -42,6 +42,18 @@ export const workspaceService = {
 
     return data;
   },
+
+  async deleteWorkspace(
+    supabase: SupabaseClient,
+    workspaceId: string,
+    ): Promise<void> {
+      const { error } = await supabase
+        .from("workspaces")
+        .delete()
+        .eq("id", workspaceId);
+
+      if (error) throw error;
+    },
 };
 
 export const workspaceMemberService = {
@@ -51,7 +63,7 @@ export const workspaceMemberService = {
     workspaceId: string,
     userId: string,
   ): Promise<WorkspaceMembers | null> {
-    
+
     const { data, error } = await supabase
       .from("workspace_members")
       .select("*")
@@ -107,10 +119,6 @@ export const workspaceDocumentService = {
     
     const { data, error } = await supabase
       .from("documents")
-      // .update({
-      //   ...updates,
-      //   updated_at: new Date().toISOString(),
-      // })
       .update(updates)
       .eq("id", id)
       .eq("workspace_id", workspace_id)
@@ -122,6 +130,18 @@ export const workspaceDocumentService = {
 
     return data;
   },
+
+  async deleteDocument(
+    supabase: SupabaseClient,
+    documentId: string,
+    ): Promise<void> {
+      const { error } = await supabase
+        .from("documents")
+        .delete()
+        .eq("id", documentId);
+
+      if (error) throw error;
+    },
 
   async getDocumentsByWorkspaceId(
     supabase: SupabaseClient,
