@@ -45,21 +45,23 @@ export const workspaceService = {
 };
 
 export const workspaceMemberService = {
-  // TODO
-  async getWorkspaceMembers(
+
+  async getWorkspaceMember(
     supabase: SupabaseClient,
-    userId: string,
     workspaceId: string,
-  ): Promise<WorkspaceMembers[]> {
+    userId: string,
+  ): Promise<WorkspaceMembers | null> {
+    
     const { data, error } = await supabase
       .from("workspace_members")
-      .select("*, users (id, name, email, avatar)")
-      .eq("workspace_id", workspaceId);
-    //   .order("joined_at", { ascending: false });
+      .select("*")
+      .eq("workspace_id", workspaceId)
+      .eq("user_id", userId)
+      .maybeSingle();
 
     if (error) throw error;
 
-    return data || [];
+    return data;
   },
 
   async addWorkspaceMember(
@@ -77,29 +79,6 @@ export const workspaceMemberService = {
     return data;
   },
 };
-
-// export const workspaceMemberDataService = {
-  //! async createWorkspaceAndAddMember(data: {
-  //   name: string;
-  //   slug: string;
-  //   userId: string;
-  //   role: string;
-  // }) {
-  //   const workspace = await workspaceService.createWorkspace({
-  //     created_by: data.userId,
-  //     name: data.name,
-  //     slug: data.slug,
-  //   });
-
-  //   await workspaceMemberService.addWorkspaceMember({
-  //     workspace_id: workspace.id,
-  //     user_id: data.userId,
-  //     role: "admin",
-  //   });
-
-  //   return workspace;
-  // },
-// };
 
 export const workspaceDocumentService = {
   async createDocument(
