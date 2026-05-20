@@ -10,10 +10,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  HomeIcon,
-  LayoutDashboard,
-} from "lucide-react";
+import { HomeIcon, LayoutDashboard, Settings } from "lucide-react";
 import { useWorkspaceStore } from "@/store/workspace.store";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 import { useAuthStore } from "@/store/auth.store";
@@ -22,26 +19,14 @@ import { toast } from "sonner";
 import { NavDocuments } from "./nav-documents";
 import { getClientSupabase } from "@/lib/supabase/client";
 import LogoutButton from "./auth/logout-button";
+import { useWorkspace } from "./workspaces/workspace-provider";
 
-const data = {
-  navMain: [
-    // * Future Implementation plans
-    // {
-    //   title: "Search",
-    //   url: "#",
-    //   icon: (
-    //     <SearchIcon
-    //     />
-    //   ),
-    // },
-    // {
-    //   title: "Ask AI",
-    //   url: "#",
-    //   icon: (
-    //     <SparklesIcon
-    //     />
-    //   ),
-    // },
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, isLoading } = useAuthStore();
+  const { workspaces, setWorkspaces, setIsLoadingWorkspaces } =
+    useWorkspaceStore();
+  const { workspace: activeWorkspace } = useWorkspace();
+  const navItems = [
     {
       title: "Home",
       url: "/",
@@ -52,14 +37,12 @@ const data = {
       url: "/dashboard",
       icon: <LayoutDashboard />,
     },
-  ],
-  
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, isLoading } = useAuthStore();
-  const { workspaces, setWorkspaces, setIsLoadingWorkspaces } =
-    useWorkspaceStore();
+    {
+      title: "Settings",
+      url: `/workspace/${activeWorkspace.slug}/settings`,
+      icon: <Settings />,
+    },
+  ];
   const supabase = getClientSupabase();
   React.useEffect(() => {
     let isMounted = true;
@@ -100,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
         <WorkspaceSwitcher />
-        <NavMain items={data.navMain} />
+        <NavMain items={navItems} />
       </SidebarHeader>
       <SidebarContent>
         {/* <NavFavorites favorites={data.favorites} /> */}
