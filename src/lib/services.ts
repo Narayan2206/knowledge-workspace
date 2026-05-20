@@ -135,12 +135,18 @@ export const workspaceDocumentService = {
     supabase: SupabaseClient,
     documentId: string,
     ): Promise<void> {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("documents")
         .delete()
-        .eq("id", documentId);
-
+        .eq("id", documentId)
+        .select();
+        
       if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error(
+          "You do not have permission to delete this document"
+        );
+      }
     },
 
   async getDocumentsByWorkspaceId(
