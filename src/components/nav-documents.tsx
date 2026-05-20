@@ -74,7 +74,6 @@ export function NavDocuments() {
         created_by: user.id,
       });
 
-      console.log("Created doc:", newDoc);
       router.push(`/workspace/${activeWorkspace.slug}/document/${newDoc.id}`);
       router.refresh();
     } catch (err) {
@@ -109,7 +108,7 @@ export function NavDocuments() {
               size={"xs"}
               variant="ghost"
               onClick={handleCreateDocument}
-              className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
+              className="text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-pointer"
             >
               <PlusIcon className="w-4 h-4" />
             </Button>
@@ -137,7 +136,7 @@ export function NavDocuments() {
                     {CAN_DELETE_DOCUMENTS && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <SidebarMenuAction>
+                          <SidebarMenuAction className="cursor-pointer">
                             <Ellipsis />
                           </SidebarMenuAction>
                         </DropdownMenuTrigger>
