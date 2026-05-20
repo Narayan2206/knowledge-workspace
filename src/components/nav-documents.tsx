@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Ellipsis, PlusIcon, Trash2Icon } from "lucide-react";
+import { Ellipsis, Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button } from "./ui/button";
 import { workspaceDocumentService } from "@/lib/services";
 import { useAuthStore } from "@/store/auth.store";
@@ -24,6 +24,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 const defaultContent = {
   type: "doc",
@@ -40,12 +51,18 @@ export function NavDocuments() {
     documents,
     role: memberRole,
   } = useWorkspace();
-  const CAN_DELETE_DOCUMENTS = memberRole === "owner";
+  const isOwner = memberRole === "owner";
+  const CAN_DELETE_DOCUMENTS = isOwner;
   const user = useAuthStore((s) => s.user);
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
   const router = useRouter();
   const params = useParams();
+  const [activeDeleteDoc, setActiveDeleteDoc] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleCreateDocument() {
     if (!activeWorkspace || !user) return;
@@ -65,78 +82,146 @@ export function NavDocuments() {
       toast.error("Error creating document ", { position: "top-center" });
     }
   }
+
+  async function handleDeleteDocument(docId: string | undefined) {
+    if (!activeWorkspace || !user || !docId) return;
+    try {
+      setIsDeleting(true);
+      await workspaceDocumentService.deleteDocument(supabase, docId);
+      toast.success("Document deleted", { position: "top-center" });
+      setActiveDeleteDoc(null);
+      router.replace(`/workspace/${activeWorkspace.slug}`);
+      router.refresh();
+    } catch (err:any) {
+      console.error(err);
+      toast.error(err?.message || "Failed to delete document", { position: "top-center" });
+    } finally {
+      setIsDeleting(false);
+    }
+  }
   return (
-    <SidebarGroup>
-      <div className="flex items-center justify-between px-2">
-        <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
-        {documents.length > 0 && (
-          <Button
-            size={"xs"}
-            variant="ghost"
-            onClick={handleCreateDocument}
-            className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
-          >
-            <PlusIcon className="w-4 h-4" />
-          </Button>
-        )}
-      </div>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {isLoadingDocuments
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <WorkspaceItemSkeleton key={i} />
-              ))
-            : documents.map((doc) => (
-                <SidebarMenuItem key={doc.id}>
-                  <SidebarMenuButton
-                    isActive={doc.id === params.docId}
-                    asChild
-                    className="cursor-pointer"
-                  >
-                    <Link
-                      href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}
-                    >
-                      <span>{doc.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                  {CAN_DELETE_DOCUMENTS && (<DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction>
-                        <Ellipsis />
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      side="right"
-                      align="start"
-                      className="w-48 bg-zinc-950 border-zinc-800 text-zinc-300"
-                    >
-                      <DropdownMenuItem
-                        onClick={() => {
-                          console.log("Delete document", doc.id);
-                        }}
-                        className="gap-2 text-red-400 focus:text-red-400 focus:bg-red-950/30 cursor-pointer"
-                      >
-                        <Trash2Icon className="size-4" />
-                        <span>Delete document</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>)}
-                </SidebarMenuItem>
-              ))}
-          {documents.length === 0 && (
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                className="text-sidebar-foreground/70"
-                onClick={handleCreateDocument}
-              >
-                <PlusIcon />
-                <span>New Document</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+    <>
+      <SidebarGroup>
+        <div className="flex items-center justify-between px-2">
+          <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
+          {documents.length > 0 && (
+            <Button
+              size={"xs"}
+              variant="ghost"
+              onClick={handleCreateDocument}
+              className="text-sidebar-foreground/70 hover:text-sidebar-foreground"
+            >
+              <PlusIcon className="w-4 h-4" />
+            </Button>
           )}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+        </div>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {isLoadingDocuments
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <WorkspaceItemSkeleton key={i} />
+                ))
+              : documents.map((doc) => (
+                  <SidebarMenuItem key={doc.id}>
+                    <SidebarMenuButton
+                      isActive={doc.id === params.docId}
+                      asChild
+                      className="cursor-pointer"
+                    >
+                      <Link
+                        href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}
+                      >
+                        <span>{doc.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    {CAN_DELETE_DOCUMENTS && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction>
+                            <Ellipsis />
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          side="right"
+                          align="start"
+                          className="w-48 bg-zinc-950 border-zinc-800 text-zinc-300"
+                        >
+                          <DropdownMenuItem
+                            disabled={isDeleting}
+                            onClick={() =>
+                              setActiveDeleteDoc({
+                                id: doc?.id || "",
+                                title: doc?.title || "",
+                              })
+                            }
+                            className="gap-2 text-red-400 focus:text-red-400 focus:bg-red-950/30 cursor-pointer"
+                          >
+                            <Trash2Icon className="size-4" />
+                            <span>Delete document</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </SidebarMenuItem>
+                ))}
+            {documents.length === 0 && (
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  className="text-sidebar-foreground/70"
+                  onClick={handleCreateDocument}
+                >
+                  <PlusIcon />
+                  <span>New Document</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <AlertDialog
+        open={activeDeleteDoc !== null}
+        onOpenChange={(isOpen) => !isOpen && setActiveDeleteDoc(null)}
+      >
+        <AlertDialogContent className="bg-zinc-950 border-zinc-800 max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground text-lg font-semibold tracking-tight">
+              Are you absolutely sure?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-muted-foreground mt-1">
+              This action cannot be undone. This will permanently delete the
+              document{" "}
+              <span className="text-zinc-200 font-medium font-mono text-xs px-1 py-0.5 bg-zinc-900 border border-zinc-800 rounded">
+                {activeDeleteDoc?.title}
+              </span>{" "}
+              and remove its data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-6 gap-2">
+            <AlertDialogCancel
+              disabled={isDeleting}
+              className="border-zinc-800 bg-transparent text-muted-foreground hover:bg-zinc-900 hover:text-foreground transition-colors"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={() => handleDeleteDocument(activeDeleteDoc?.id)}
+              className="bg-red-600 hover:bg-red-500 text-white gap-2"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2Icon className="size-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete document"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
