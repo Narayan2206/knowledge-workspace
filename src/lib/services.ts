@@ -71,12 +71,18 @@ export const workspaceService = {
     supabase: SupabaseClient,
     workspaceId: string,
     ): Promise<void> {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("workspaces")
         .delete()
-        .eq("id", workspaceId);
+        .eq("id", workspaceId)
+        .select();
 
       if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error(
+          "You do not have permission to delete this workspace"
+        );
+      }
     },
 };
 
