@@ -43,6 +43,30 @@ export const workspaceService = {
     return data;
   },
 
+  async updateWorkspace(
+    supabase: SupabaseClient,
+    workspaceId: string,
+    newName: string,
+  ): Promise<Workspaces> {
+    
+    const { data, error } = await supabase
+      .from("workspaces")
+      .update({name: newName.trim()})
+      .eq('id', workspaceId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    if (!data) {
+      throw new Error(
+        "You do not have permission to update this workspace"
+      );
+    }
+
+    return data;
+  },
+
   async deleteWorkspace(
     supabase: SupabaseClient,
     workspaceId: string,
