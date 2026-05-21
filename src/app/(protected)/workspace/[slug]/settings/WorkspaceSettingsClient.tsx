@@ -18,12 +18,15 @@ import {
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { useWorkspaceStore } from "@/store/workspace.store";
 
 export default function WorkspaceSettingsClient() {
   const [isUpdating, setIsUpdating] = useState(false);
   const supabase = getClientSupabase();
   const router = useRouter();
   const { workspace: activeWorkspace } = useWorkspace();
+  const workspaces = useWorkspaceStore((s) => s.workspaces);
+  const setWorkspaces  = useWorkspaceStore((s) => s.setWorkspaces);
   const originalWorkspaceName = useRef(activeWorkspace?.name ?? "");
   const [workspaceName, setWorkspaceName] = useState<string>(
     activeWorkspace?.name ?? "",
@@ -57,6 +60,7 @@ export default function WorkspaceSettingsClient() {
       );
 
       originalWorkspaceName.current = updatedWorkspace.name;
+      setWorkspaces(workspaces.map((w) => w.id === updatedWorkspace.id ? updatedWorkspace : w));
 
       toast.success("Workspace updated successfully", {
         position: "top-center",
