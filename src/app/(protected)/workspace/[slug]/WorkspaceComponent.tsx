@@ -41,9 +41,9 @@ const WorkspaceComponent = () => {
       console.log("Created doc:", newDoc);
       router.push(`/workspace/${activeWorkspace.slug}/document/${newDoc.id}`);
       router.refresh();
-    } catch (err) {
+    } catch (err:any) {
       console.error(err);
-      toast.error("Error creating document ", { position: "top-center" });
+      toast.error(err?.message || "Error creating document ", { position: "top-center" });
     }
   }
   
