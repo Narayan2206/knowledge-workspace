@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FileTextIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { PERMISSIONS } from "@/lib/permissions";
 
 const defaultContent = {
   type: "doc",
@@ -21,10 +22,11 @@ const defaultContent = {
 };
 
 const WorkspaceComponent = () => {
-  const { workspace: activeWorkspace, documents } = useWorkspace();
+  const { workspace: activeWorkspace, documents, role: memberRole } = useWorkspace();
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
   const supabase = getClientSupabase();
+  const canCreate = PERMISSIONS.canCreateDocuments(memberRole);
 
   async function handleCreateDocument() {
     if (!activeWorkspace || !user) return;
@@ -53,10 +55,10 @@ const WorkspaceComponent = () => {
             {activeWorkspace?.name || "Workspace"}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Manage and edit your workspace documents.
+            {canCreate ? "Manage and edit your workspace documents." : "View Documents in this workspace."}
           </p>
         </div>
-        {documents && documents.length > 0 && (
+        {documents && documents.length > 0 && canCreate && (
           <Button onClick={handleCreateDocument} size="sm" className="gap-2">
             <PlusIcon className="size-4" />
             New Document
@@ -71,13 +73,14 @@ const WorkspaceComponent = () => {
           </div>
           <h3 className="font-semibold text-lg">No documents created yet</h3>
           <p className="text-sm text-muted-foreground max-w-sm mt-1 mb-6">
-            Get started by creating your first document to capture thoughts,
-            meeting notes, or documentation.
+            { canCreate ? `Get started by creating your first document to capture thoughts,
+            meeting notes, or documentation.` : `You currently have view-only access to this workspace.
+            Ask the workspace owner to create documents.`}
           </p>
-          <Button onClick={handleCreateDocument} className="gap-2">
+          {canCreate && (<Button onClick={handleCreateDocument} className="gap-2">
             <PlusIcon className="size-4" />
             Create First Document
-          </Button>
+          </Button>)}
         </div>
       ) : (
         <div className="grid gap-3">
