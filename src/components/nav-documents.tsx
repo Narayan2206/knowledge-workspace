@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { PERMISSIONS } from "@/lib/permissions";
 
 const defaultContent = {
   type: "doc",
@@ -51,8 +52,8 @@ export function NavDocuments() {
     documents,
     role: memberRole,
   } = useWorkspace();
-  const isOwner = memberRole === "owner";
-  const CAN_DELETE_DOCUMENTS = isOwner;
+  const canCreate = PERMISSIONS.canCreateDocuments(memberRole);
+  const canDelete = PERMISSIONS.canDeleteDocuments(memberRole);
   const user = useAuthStore((s) => s.user);
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
@@ -76,9 +77,9 @@ export function NavDocuments() {
 
       router.push(`/workspace/${activeWorkspace.slug}/document/${newDoc.id}`);
       router.refresh();
-    } catch (err) {
+    } catch (err:any) {
       console.error(err);
-      toast.error("Error creating document ", { position: "top-center" });
+      toast.error(err?.message || "Error creating document ", { position: "top-center" });
     }
   }
 
@@ -102,8 +103,9 @@ export function NavDocuments() {
     <>
       <SidebarGroup>
         <div className="flex items-center justify-between px-2">
-          <SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>
-          {documents.length > 0 && (
+          {/* If current user is Viewer and there are no documents, then the sidebar shows Documents with empty listing, so to hide that, this condition is applied */}
+          {!(!canCreate && documents.length === 0) && (<SidebarGroupLabel className="px-0">Documents</SidebarGroupLabel>)}
+          {documents.length > 0 && canCreate && (
             <Button
               size={"xs"}
               variant="ghost"
@@ -133,7 +135,7 @@ export function NavDocuments() {
                         <span>{doc.title}</span>
                       </Link>
                     </SidebarMenuButton>
-                    {CAN_DELETE_DOCUMENTS && (
+                    {canDelete && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <SidebarMenuAction className="cursor-pointer">
@@ -163,7 +165,7 @@ export function NavDocuments() {
                     )}
                   </SidebarMenuItem>
                 ))}
-            {documents.length === 0 && (
+            {documents.length === 0 && canCreate && (
               <SidebarMenuItem>
                 <SidebarMenuButton
                   className="text-sidebar-foreground/70"
