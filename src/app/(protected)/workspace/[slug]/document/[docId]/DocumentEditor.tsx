@@ -41,9 +41,9 @@ export default function DocumentEditor({ document }: { document: Documents }) {
           );
           console.log("DOCUMENT SAVED");
           router.refresh();
-        } catch (err) {
+        } catch (err:any) {
           console.error(err);
-          toast.error("Error saving document", { position: "top-center" });
+          toast.error(err?.message || "Error saving document", { position: "top-center" });
         } finally {
           setIsSaving(false);
         }
