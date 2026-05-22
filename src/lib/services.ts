@@ -54,7 +54,7 @@ export const workspaceService = {
       .update({name: newName.trim()})
       .eq('id', workspaceId)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
 
