@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { Content } from "@tiptap/react";
 import { debounce } from "@/lib/helpers/debounce";
 import { Loader2Icon } from "lucide-react";
+import { useWorkspace } from "@/components/workspaces/workspace-provider";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export default function DocumentEditor({ document }: { document: Documents }) {
   const [title, setTitle] = useState(document.title);
@@ -18,6 +20,8 @@ export default function DocumentEditor({ document }: { document: Documents }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const {role: memberRole} = useWorkspace();
+  const canEdit = PERMISSIONS.canEditDocuments(memberRole);
 
   const debouncedSave = useMemo(
     () =>
@@ -133,6 +137,7 @@ export default function DocumentEditor({ document }: { document: Documents }) {
           value={title}
           onChange={handleTitleChange}
           placeholder="Untitled Document"
+          disabled={!canEdit}
         />
       </div>
 
@@ -141,7 +146,7 @@ export default function DocumentEditor({ document }: { document: Documents }) {
       </div>
 
       <div className="min-h-[50vh] flex">
-        <Tiptap content={content} onChange={handleContentChange} />
+        <Tiptap content={content} onChange={handleContentChange} editable={canEdit}/>
       </div>
     </div>
   );

@@ -3,9 +3,10 @@
 import { useEditor, EditorContent, Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-const Tiptap = ({content, onChange}: {content:Content | null; onChange: (content: Content) => void;}) => {
+const Tiptap = ({content, onChange, editable=true}: {content:Content | null; onChange: (content: Content) => void; editable?: boolean;}) => {
   const editor = useEditor({
     extensions: [StarterKit],
+    editable,
     content: content ?? undefined,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
