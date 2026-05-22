@@ -133,9 +133,15 @@ export const workspaceDocumentService = {
       .from("documents")
       .insert(document)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
+
+    if (!data) {
+      throw new Error(
+        "Unable to create document or you do not have permission"
+      );
+    }
 
     return data;
   },
@@ -156,7 +162,7 @@ export const workspaceDocumentService = {
       .maybeSingle();
 
     if (error) throw error;
-    if (!data) throw new Error("Document not found after update");
+    if (!data) throw new Error("Document not found or you do not have permission");
 
     return data;
   },
@@ -174,7 +180,7 @@ export const workspaceDocumentService = {
       if (error) throw error;
       if (!data || data.length === 0) {
         throw new Error(
-          "You do not have permission to delete this document"
+          "Document not found or you do not have permission"
         );
       }
     },
