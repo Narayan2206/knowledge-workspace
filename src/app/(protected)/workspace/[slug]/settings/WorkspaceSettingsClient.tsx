@@ -19,12 +19,13 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useWorkspaceStore } from "@/store/workspace.store";
+import { PERMISSIONS } from "@/lib/permissions";
 
 export default function WorkspaceSettingsClient() {
   const [isUpdating, setIsUpdating] = useState(false);
   const supabase = getClientSupabase();
   const router = useRouter();
-  const { workspace: activeWorkspace } = useWorkspace();
+  const { workspace: activeWorkspace, role: memberRole } = useWorkspace();
   const workspaces = useWorkspaceStore((s) => s.workspaces);
   const setWorkspaces  = useWorkspaceStore((s) => s.setWorkspaces);
   const originalWorkspaceName = useRef(activeWorkspace?.name ?? "");
@@ -39,6 +40,7 @@ export default function WorkspaceSettingsClient() {
   const [confirmName, setConfirmName] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const isMatch = confirmName.trim() === activeWorkspace?.name;
+  const manageWorkspace = PERMISSIONS.canManageWorkspace(memberRole);
 
   const handleUpdateWorkspace = async () => {
     if (!activeWorkspace) return;
@@ -114,6 +116,16 @@ export default function WorkspaceSettingsClient() {
         </p>
       </div>
 
+      {!manageWorkspace && (<div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 mb-8">
+        <p className="text-sm text-zinc-300">
+          You have <span className="font-semibold">{memberRole}</span> access in this workspace.
+        </p>
+
+        <p className="text-xs text-muted-foreground mt-1">
+          Some settings and administrative actions are restricted to workspace owners.
+        </p>
+      </div>)}
+
       <div className="space-y-8">
         <section className="rounded-xl border border-zinc-900 bg-zinc-950/20 p-6">
           <h3 className="text-base font-semibold tracking-tight">
@@ -129,12 +141,13 @@ export default function WorkspaceSettingsClient() {
               onChange={setWorkspaceName}
               placeholder="e.g. company name"
               type="text"
+              disabled={!manageWorkspace}
             />
             <Button
               onClick={handleUpdateWorkspace}
               size="sm"
               className="gap-2 self-start"
-              disabled={saveButtonDisabled || isUpdating}
+              disabled={saveButtonDisabled || isUpdating || !manageWorkspace}
             >
               {isUpdating ? (
                 <>
@@ -148,7 +161,7 @@ export default function WorkspaceSettingsClient() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-red-950/40 bg-red-950/5 p-6">
+        { manageWorkspace && (<section className="rounded-xl border border-red-950/40 bg-red-950/5 p-6">
           <div className="flex items-center gap-2 text-red-400">
             <Trash2Icon className="size-4" />
             <h3 className="text-base font-semibold tracking-tight">
@@ -156,7 +169,7 @@ export default function WorkspaceSettingsClient() {
             </h3>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5 mb-4">
-            Irreversible actions regarding this workspace environment.
+            Permanent actions that affect this workspace and all associated documents.
           </p>
           <div className="flex items-center justify-start">
             <AlertDialog
@@ -233,7 +246,7 @@ export default function WorkspaceSettingsClient() {
               </AlertDialogContent>
             </AlertDialog>
           </div>
-        </section>
+        </section>)}
       </div>
     </main>
   );
