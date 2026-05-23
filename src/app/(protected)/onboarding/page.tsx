@@ -12,11 +12,11 @@ async function Onboarding() {
   if (!user) {
     redirect("/login");
   }
-  const workspaces = await workspaceService.getAllWorkspaces(supabase, user.id);
 
-  if (workspaces.length > 0) {
+  if(user?.user_metadata?.has_completed_onboarding){
     redirect("/dashboard");
   }
+  
   return (
     <main className="h-screen">
       <div className="flex items-center justify-center h-full">

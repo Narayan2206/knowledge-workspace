@@ -1,9 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
 
-// const siteUrl =
-//   process.env.NEXT_PUBLIC_SITE_URL ||
-//   `https://${process.env.VERCEL_URL}`;
-
 export async function signUpNewUser(
   email: string,
   password: string,
@@ -17,6 +13,7 @@ export async function signUpNewUser(
       emailRedirectTo: `${location.origin}/auth/callback`,
       data: {
         name,
+        has_completed_onboarding: false,
       },
     },
   });

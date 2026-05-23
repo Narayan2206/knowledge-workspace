@@ -20,8 +20,23 @@ export default function AuthCallback() {
       if (isMounted) {
         if (error || !user) {
           router.replace("/login");
-        } else {
+          return;
+        }
+        try {
+          if (!user.user_metadata?.has_completed_onboarding) {
+            const { error: updateError } = await supabase.auth.updateUser({
+              data: {
+                has_completed_onboarding: true,
+              },
+            });
+            if (updateError) {
+              console.error("Error updating onboarding metadata", updateError);
+            }
+          }
           router.replace("/onboarding");
+        } catch (err) {
+          console.error("Auth callback error", err);
+          router.replace("/login");
         }
       }
     };
