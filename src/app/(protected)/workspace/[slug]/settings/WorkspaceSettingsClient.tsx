@@ -42,7 +42,7 @@ export default function WorkspaceSettingsClient() {
   const isMatch = confirmName.trim() === activeWorkspace?.name;
   const manageWorkspace = PERMISSIONS.canManageWorkspace(memberRole);
 
-  const handleUpdateWorkspace = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateWorkspace = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!activeWorkspace) return;
     const trimmedName = workspaceName.trim();

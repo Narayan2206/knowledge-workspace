@@ -13,13 +13,13 @@ export function WorkspaceForm({
 }) {
   const [workspaceName, setWorkspaceName] = useState("");
 
-    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (workspaceName.trim()) onSubmit(workspaceName);
     };
 
   return (
-    // <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+    <form onSubmit={handleSubmit}>
       <div className="w-full">
         <div className="mb-8">
           <CustomInput
@@ -33,12 +33,12 @@ export function WorkspaceForm({
         </div>
         <Button
           className="w-full"
-          onClick={handleSubmit}
+          type="submit"
           disabled={workspaceName.length < 3 || isLoading}
         >
           Create Workspace!
         </Button>
       </div>
-    // </form>
+    </form>
   );
 }

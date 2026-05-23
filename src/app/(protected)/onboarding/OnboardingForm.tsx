@@ -16,7 +16,7 @@ function OnboardingForm() {
   const supabase = getClientSupabase();
 
   const handleCreateWorkspace = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.SubmitEvent<HTMLFormElement>,
   ): Promise<void> => {
     e.preventDefault();
 
@@ -26,12 +26,12 @@ function OnboardingForm() {
     }
 
     try {
-        const workspace = await workspaceService.createWorkspace(supabase, {
-          name: workspaceName,
-          slug: `${Date.now()}-${Math.random()}`,
-          created_by: user.id,
-        });
-        console.log("Response ", workspace);
+      const workspace = await workspaceService.createWorkspace(supabase, {
+        name: workspaceName,
+        slug: `${Date.now()}-${Math.random()}`,
+        created_by: user.id,
+      });
+      console.log("Response ", workspace);
       if (workspace?.slug) {
         router.replace(`/workspace/${workspace.slug}`);
       }
@@ -46,23 +46,25 @@ function OnboardingForm() {
       <p>Welcome! 👋</p>
       <p> Create your workspace to get started.</p>
       <div className="w-full">
-        <div className="mb-8">
-          <CustomInput
-            label="Workspace Name"
-            value={workspaceName}
-            onChange={setWorkspaceName}
-            placeholder="Enter your workspace name"
-            type="text"
-            required
-          />
-        </div>
-        <Button
-          className="w-full"
-          onClick={handleCreateWorkspace}
-          disabled={workspaceName.length < 3}
-        >
-          Create Workspace!
-        </Button>
+        <form onSubmit={handleCreateWorkspace}>
+          <div className="mb-8">
+            <CustomInput
+              label="Workspace Name"
+              value={workspaceName}
+              onChange={setWorkspaceName}
+              placeholder="Enter your workspace name"
+              type="text"
+              required
+            />
+          </div>
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={workspaceName.length < 3}
+          >
+            Create Workspace!
+          </Button>
+        </form>
       </div>
     </div>
   );
