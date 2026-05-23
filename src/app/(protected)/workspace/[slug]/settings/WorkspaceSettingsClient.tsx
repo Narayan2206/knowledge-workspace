@@ -42,7 +42,8 @@ export default function WorkspaceSettingsClient() {
   const isMatch = confirmName.trim() === activeWorkspace?.name;
   const manageWorkspace = PERMISSIONS.canManageWorkspace(memberRole);
 
-  const handleUpdateWorkspace = async () => {
+  const handleUpdateWorkspace = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!activeWorkspace) return;
     const trimmedName = workspaceName.trim();
     if (
@@ -134,31 +135,33 @@ export default function WorkspaceSettingsClient() {
           <p className="text-xs text-muted-foreground mt-0.5 mb-4">
             Change the display identifiers for this instance.
           </p>
-          <div className="rounded-lg border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 font-mono p-4 flex-col gap-4">
-            <CustomInput
-              label="Workspace Name"
-              value={workspaceName}
-              onChange={setWorkspaceName}
-              placeholder="e.g. company name"
-              type="text"
-              disabled={!manageWorkspace}
-            />
-            <Button
-              onClick={handleUpdateWorkspace}
-              size="sm"
-              className="gap-2 self-start"
-              disabled={saveButtonDisabled || isUpdating || !manageWorkspace}
-            >
-              {isUpdating ? (
-                <>
-                  <Loader2Icon className="size-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </div>
+          <form onSubmit={handleUpdateWorkspace}>
+            <div className="rounded-lg border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 font-mono p-4 flex-col gap-4">
+              <CustomInput
+                label="Workspace Name"
+                value={workspaceName}
+                onChange={setWorkspaceName}
+                placeholder="e.g. company name"
+                type="text"
+                disabled={!manageWorkspace}
+              />
+              <Button
+                type="submit"
+                size="sm"
+                className="gap-2 self-start"
+                disabled={saveButtonDisabled || isUpdating || !manageWorkspace}
+              >
+                {isUpdating ? (
+                  <>
+                    <Loader2Icon className="size-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </div>
+          </form>
         </section>
 
         { manageWorkspace && (<section className="rounded-xl border border-red-950/40 bg-red-950/5 p-6">
