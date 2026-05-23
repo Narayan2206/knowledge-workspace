@@ -2,10 +2,20 @@
 
 import { useEditor, EditorContent, Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Toolbar from "./Toolbar";
 
-const Tiptap = ({content, onChange, editable=true}: {content:Content | null; onChange: (content: Content) => void; editable?: boolean;}) => {
+const Tiptap = ({
+  content,
+  onChange,
+  editable = true,
+}: {
+  content: Content | null;
+  onChange: (content: Content) => void;
+  editable?: boolean;
+}) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Underline],
     editable,
     content: content ?? undefined,
     immediatelyRender: false,
@@ -15,7 +25,12 @@ const Tiptap = ({content, onChange, editable=true}: {content:Content | null; onC
     },
   });
 
-  return <EditorContent editor={editor} className="flex-1" />;
+  return (
+    <div className="flex flex-col w-full gap-1">
+      <Toolbar editor={editor} />
+      <EditorContent editor={editor} className="flex-1" />
+    </div>
+  );
 };
 
 export default Tiptap;
