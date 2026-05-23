@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { PERMISSIONS } from "@/lib/permissions";
+import { usePathname } from 'next/navigation';
 
 const defaultContent = {
   type: "doc",
@@ -58,6 +59,7 @@ export function NavDocuments() {
   const isLoadingDocuments = useDocumentStore((s) => s.isLoadingDocuments);
   const supabase = getClientSupabase();
   const router = useRouter();
+  const pathname = usePathname();
   const params = useParams();
   const [activeDeleteDoc, setActiveDeleteDoc] = useState<{
     id: string;
@@ -90,7 +92,10 @@ export function NavDocuments() {
       await workspaceDocumentService.deleteDocument(supabase, docId);
       toast.success("Document deleted", { position: "top-center" });
       setActiveDeleteDoc(null);
-      router.replace(`/workspace/${activeWorkspace.slug}`);
+      const isOnDocumentPage = pathname.includes("/document/");
+      if(isOnDocumentPage){
+        router.replace(`/workspace/${activeWorkspace.slug}`);
+      }
       router.refresh();
     } catch (err:any) {
       console.error(err);
