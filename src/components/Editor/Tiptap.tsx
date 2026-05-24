@@ -27,7 +27,7 @@ const Tiptap = ({
 
   return (
     <div className="flex flex-col w-full gap-1">
-      <Toolbar editor={editor} />
+      { editable && (<Toolbar editor={editor} />)}
       <EditorContent editor={editor} className="flex-1" />
     </div>
   );
