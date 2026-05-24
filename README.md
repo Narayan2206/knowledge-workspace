@@ -1,36 +1,206 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Slate
 
-## Getting Started
+A modern workspace platform for creating, organizing, and managing rich-text documents with authentication, structured workspaces, and permission-aware architecture.
 
-First, run the development server:
+Built with Next.js, Supabase, TypeScript, and TipTap.
+
+## Live Demo
+
+[Live Application](https://knowledge-workspace-three.vercel.app/)
+
+---
+
+## Overview
+
+Slate provides a clean workspace experience where users can create dedicated workspaces and organize documents with a distraction-free editor.
+
+The goal was to build a SaaS-style application with scalable architecture rather than a simple CRUD project — focusing on authentication flows, authorization, onboarding, rich text editing, and backend security.
+
+---
+
+## Features
+
+### Authentication & User Flow
+
+- Secure authentication with Supabase Auth
+- Email verification flow
+- Custom onboarding experience for first-time users
+- Protected routes and session handling
+- Resend SMTP integration for transactional emails
+
+### Workspace Management
+
+- Create workspaces
+- Rename workspaces
+- Delete workspaces
+- Workspace switcher
+- Dedicated workspace settings page
+- Empty state handling
+
+### Document Management
+
+- Create documents
+- Rich text editing support
+- Delete documents
+- Autosave support
+- Sidebar document navigation
+- Persistent document organization
+
+### Rich Text Editor
+
+Powered by TipTap:
+
+- Bold formatting
+- Italic formatting
+- Underline support
+- Strikethrough support
+- Ordered lists
+- Bullet lists
+- Extensible editor architecture
+
+### Authorization & Security
+
+- Row Level Security (RLS) policies
+- Backend permission enforcement
+- Role-aware architecture foundation
+- Permission-aware UI handling
+- Ownership validation
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- Next.js 16
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- TipTap
+
+### Backend
+
+- Supabase
+- PostgreSQL
+- Row Level Security (RLS)
+
+### Email
+
+- Resend SMTP
+
+### Deployment
+
+- Vercel
+
+---
+
+## Architecture Highlights
+
+- Service-based architecture for workspace and document operations
+- Database triggers for automatic timestamps
+- Modular permission layer
+- Protected onboarding flow
+- Reusable UI components
+- Autosave workflow handling
+- Scalable workspace-document relationship design
+
+---
+
+## Database Design
+
+Core entities:
+
+- users
+- workspaces
+- workspace_members
+- documents
+
+Architecture supports future role expansion:
+
+- Owner
+- Editor
+- Viewer
+
+Current implementation automatically assigns workspace creators as owners.
+
+---
+
+## Future Roadmap
+
+- Workspace member invitations
+- Configurable roles
+- Realtime collaboration
+- Presence indicators
+- Task checklist support
+- Additional editor extensions
+- Collaborative editing
+
+---
+
+<!-- ## Screenshots
+
+### Landing Page
+
+Add image here
+
+```md
+![Landing Page](./screenshots/landing.png)
+```
+
+### Dashboard
+
+```md
+![Dashboard](./screenshots/dashboard.png)
+```
+
+### Editor
+
+```md
+![Editor](./screenshots/editor.png)
+```
+
+### Workspace Settings
+
+```md
+![Settings](./screenshots/settings.png)
+```
+
+--- -->
+
+## Local Setup
+
+Clone repository:
+
+```bash
+git clone https://github.com/Narayan2206/knowledge-workspace.git 
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create environment variables:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Author
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Narayan Pal
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built as a portfolio project focused on scalable SaaS architecture and real-world application patterns.
