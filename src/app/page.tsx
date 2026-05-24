@@ -13,7 +13,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-zinc-800">
       <nav className="flex items-center justify-between p-4 max-w-6xl w-full mx-auto border-b border-zinc-900">
         <div className="flex items-center gap-2 font-semibold tracking-tight text-lg">
-          <div className="size-6 rounded bg-foreground flex items-center justify-center text-background font-bold text-xs">
+          <div className="size-6 rounded bg-primary flex items-center justify-center font-bold text-xs">
             S
           </div>
           <span>Slate</span>
@@ -35,7 +35,7 @@ export default function Home() {
               <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                 <Link href="/login">Login</Link>
               </Button>
-              <Button asChild size="sm" className="bg-foreground text-background hover:bg-zinc-200">
+              <Button asChild size="sm">
                 <Link href="/signup">Sign up</Link>
               </Button>
             </>
@@ -50,8 +50,8 @@ export default function Home() {
           <span>A minimal space for structured thinking</span>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-foreground to-muted-foreground max-w-2xl leading-tight">
-          Workspaces built for your dynamic documents.
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-b from-foreground to-primary max-w-2xl leading-tight">
+          Workspaces built for focused thinking.
         </h1>
 
         <p className="text-sm sm:text-base text-muted-foreground max-w-lg mt-4 mb-8 leading-relaxed">
@@ -61,7 +61,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {user ? (
             <div className="space-y-4">
-              <Button asChild size="lg" className="gap-2 bg-foreground text-background hover:bg-zinc-200 shadow-sm">
+              <Button asChild size="lg" className="gap-2 shadow-sm">
                 <Link href="/dashboard">
                   Go to Dashboard
                   <ArrowRightIcon className="size-4" />
@@ -72,7 +72,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <Button asChild size="lg" className="gap-2 bg-foreground text-background hover:bg-zinc-200 shadow-sm">
+            <Button asChild size="lg" className="gap-2 shadow-sm">
               <Link href="/signup">
                 Get Started Free
                 <ArrowRightIcon className="size-4" />
