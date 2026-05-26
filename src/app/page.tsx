@@ -55,7 +55,7 @@ export default function Home() {
         </h1>
 
         <p className="text-sm sm:text-base text-muted-foreground max-w-lg mt-4 mb-8 leading-relaxed">
-          Create environments, organize files cleanly, and capture your thoughts without the configuration clutter. Fast, distraction-free execution.
+          Organize documents, capture ideas, and manage your workspace in one distraction-free place.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -74,7 +74,7 @@ export default function Home() {
           ) : (
             <Button asChild size="lg" className="gap-2 shadow-sm">
               <Link href="/signup">
-                Get Started Free
+                Get Started
                 <ArrowRightIcon className="size-4" />
               </Link>
             </Button>
@@ -83,7 +83,7 @@ export default function Home() {
       </main>
 
       <footer className="p-6 text-center text-xs text-muted-foreground border-t border-zinc-900 max-w-6xl w-full mx-auto">
-        &copy; {new Date().getFullYear()} Slate Inc. All rights reserved.
+        Built with Next.js and Supabase.
       </footer>
     </div>
   );

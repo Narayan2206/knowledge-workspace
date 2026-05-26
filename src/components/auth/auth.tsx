@@ -180,7 +180,7 @@ const Auth = ({ type }: AuthProps) => {
           </div>
           {type === "login" ? (
             <p>
-              New to our application?
+              Don't have an account?
               <Button variant={"link"} asChild className="text-blue-800">
                 <Link href="/signup">SignUp</Link>
               </Button>
