@@ -37,6 +37,7 @@ import {
 import { useState } from "react";
 import { PERMISSIONS } from "@/lib/permissions";
 import { usePathname } from 'next/navigation';
+import { TruncatedTitle } from "./TruncatedTitle/truncated-title";
 
 const defaultContent = {
   type: "doc",
@@ -136,8 +137,9 @@ export function NavDocuments() {
                     >
                       <Link
                         href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}
+                        className="flex min-w-0"
                       >
-                        <span>{doc.title}</span>
+                        <TruncatedTitle text={doc?.title || "Unknown Document"} />
                       </Link>
                     </SidebarMenuButton>
                     {canDelete && (
