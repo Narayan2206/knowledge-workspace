@@ -22,11 +22,9 @@ The goal was to build a SaaS-style application with scalable architecture rather
 
 ### Authentication & User Flow
 
-- Secure authentication with Supabase Auth
-- Email verification flow
-- Custom onboarding experience for first-time users
-- Protected routes and session handling
-- Resend SMTP integration for transactional emails
+- Implemented dedicated onboarding flow for first-time users.
+- Built protected routes and auth-aware navigation using Supabase Auth.
+- Configured Resend SMTP for email verification flow.
 
 ### Workspace Management
 
@@ -137,35 +135,24 @@ Current implementation automatically assigns workspace creators as owners.
 
 ---
 
-<!-- ## Screenshots
+## Screenshots
 
 ### Landing Page
+![Landing Page](./public/screenshots/landing_page.png)
 
-Add image here
-
-```md
-![Landing Page](./screenshots/landing.png)
-```
+### Sign Up
+![Signup](./public/screenshots/signup.png)
 
 ### Dashboard
+![Dashboard](./public/screenshots/dashboard.png)
 
-```md
-![Dashboard](./screenshots/dashboard.png)
-```
+### Workspace
+![Workspace](./public/screenshots/workspace.png)
 
-### Editor
+### Document
+![Document](./public/screenshots/document.png)
 
-```md
-![Editor](./screenshots/editor.png)
-```
-
-### Workspace Settings
-
-```md
-![Settings](./screenshots/settings.png)
-```
-
---- -->
+---
 
 ## Local Setup
 
