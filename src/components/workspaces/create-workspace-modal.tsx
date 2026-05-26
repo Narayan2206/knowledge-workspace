@@ -66,8 +66,7 @@ export function CreateWorkspaceModal({
         <DialogHeader>
           <DialogTitle>Create Workspace</DialogTitle>
           <DialogDescription>
-            Workspaces are where your team collaborates. You can change this
-            name later.
+            Workspaces help you organize documents and keep your ideas structured. You can change this name later.
           </DialogDescription>
         </DialogHeader>
         <WorkspaceForm onSubmit={handleCreate} isLoading={loading} />
