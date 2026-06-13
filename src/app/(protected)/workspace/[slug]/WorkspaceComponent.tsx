@@ -33,7 +33,7 @@ const WorkspaceComponent = () => {
     try {
       const newDoc = await workspaceDocumentService.createDocument(supabase, {
         workspace_id: activeWorkspace.id,
-        title: "Untitled",
+        title: "New Document",
         content: defaultContent,
         created_by: user.id,
       });

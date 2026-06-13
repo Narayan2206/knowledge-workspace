@@ -73,7 +73,7 @@ export function NavDocuments() {
     try {
       const newDoc = await workspaceDocumentService.createDocument(supabase, {
         workspace_id: activeWorkspace.id,
-        title: "Untitled",
+        title: "New Document",
         content: defaultContent,
         created_by: user.id,
       });
@@ -93,7 +93,7 @@ export function NavDocuments() {
       await workspaceDocumentService.deleteDocument(supabase, docId);
       toast.success("Document deleted", { position: "top-center" });
       setActiveDeleteDoc(null);
-      const isOnDocumentPage = pathname.includes("/document/");
+      const isOnDocumentPage = pathname.includes(`/document/${docId}`);
       if(isOnDocumentPage){
         router.replace(`/workspace/${activeWorkspace.slug}`);
       }
