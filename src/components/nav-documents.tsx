@@ -129,11 +129,11 @@ export function NavDocuments() {
                   <WorkspaceItemSkeleton key={i} />
                 ))
               : documents.map((doc) => (
-                  <SidebarMenuItem key={doc.id}>
+                  <SidebarMenuItem key={doc.id} className="group/row relative">
                     <SidebarMenuButton
                       isActive={doc.id === params.docId}
                       asChild
-                      className="cursor-pointer"
+                      className="cursor-pointer pr-8"
                     >
                       <Link
                         href={`/workspace/${activeWorkspace.slug}/document/${doc.id}`}
@@ -145,7 +145,7 @@ export function NavDocuments() {
                     {canDelete && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <SidebarMenuAction className="cursor-pointer">
+                          <SidebarMenuAction className="cursor-pointer opacity-0 group-hover/row:opacity-100 data-[state=open]:opacity-100 text-muted-foreground hover:text-foreground hover:bg-zinc-800/60 transition-all duration-150">
                             <Ellipsis />
                           </SidebarMenuAction>
                         </DropdownMenuTrigger>
